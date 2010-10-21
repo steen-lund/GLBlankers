@@ -1,0 +1,41 @@
+CC      = gcc
+RM      = rm -f
+
+# Change these as required
+OPTIMIZE= -O3
+DEBUG   = -g -gdwarf-2
+MODE = $(OPTIMIZE)
+CFLAGS  = -I../Common -DUSE_GL=1 -DLIBNAME=\"$(TARGET)\" -D__AMIGADATE__=\"`c:date LFORMAT %d.%m.%Y`\" -Wall $(MODE)
+
+# Flags passed to gcc during linking
+LINK    =  -nostartfiles $(MODE)
+
+OBJS    = $(SRCS:.c=.o)
+
+# Rules for building
+$(TARGET): $(OBJS)
+	@echo "Linking: $(TARGET)"
+	@$(CC) $(LINK) -o $(TARGET) $(OBJS) $(LIBS)
+
+$(OBJS) : %.o : %.c ../Makefile ../Makefile.common
+	@echo "Compiling: $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+.PHONY: clean
+clean:
+	@echo "Cleaning"
+	@$(RM) $(TARGET) $(OBJS)
+	@$(RM) ./Common/#?.o
+
+.PHONY: revision
+revision:
+	bumprev $(VERSION) $(TARGET)
+
+PHONY: install
+install:
+	copy $(TARGET) sys:utilities/blankers
+	copy $(TARGET).info sys:utilities/blankers
+	strip sys:utilities/blankers/$(TARGET)
+	avail flush >NIL:
+	@echo "Done."
+

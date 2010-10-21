@@ -1,0 +1,23 @@
+/* boing, Copyright (c) 2005 Jamie Zawinski <jwz@jwz.org>
+ *
+ * Permission to use, copy, modify, distribute, and sell this software and its
+ * documentation for any purpose is hereby granted without fee, provided that
+ * the above copyright notice appear in all copies and that both that
+ * copyright notice and this permission notice appear in supporting
+ * documentation.  No representations are made about the suitability of this
+ * software for any purpose.  It is provided "as is" without express or
+ * implied warranty.
+ *
+ * A clone of the Amiga 1000 "Boing" demo.  This was the first graphics demo
+ * for the Amiga, written by Dale Luck and RJ Mical during a break at the 1984
+ * Consumer Electronics Show (or so the legend goes.)  The boing ball was
+ * briefly the official logo of Amiga Inc., until they were bought by
+ * Commodore later that year.
+ *
+ * With no arguments, this program looks a lot like the original Amiga demo.
+ * With "-smooth -lighting", it looks... less old.
+ *
+ * The amiga version made noise when the ball hit the walls.  This version
+ * does not, obviously.
+ */
+

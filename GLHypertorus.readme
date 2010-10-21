@@ -1,0 +1,47 @@
+/* hypertorus --- Shows a hypertorus that rotates in 4d */
+
+/* Copyright (c) 2003-2005 Carsten Steger <carsten@mirsanmir.org>. */
+
+/*
+ * Permission to use, copy, modify, and distribute this software and its
+ * documentation for any purpose and without fee is hereby granted,
+ * provided that the above copyright notice appear in all copies and that
+ * both that copyright notice and this permission notice appear in
+ * supporting documentation.
+ *
+ * This file is provided AS IS with no warranties of any kind.  The author
+ * shall have no liability with respect to the infringement of copyrights,
+ * trade secrets or any patents by this file or any part thereof.  In no
+ * event will the author be liable for any lost revenue or profits or
+ * other special, indirect and consequential damages.
+ *
+ * REVISION HISTORY:
+ * C. Steger - 03/05/18: Initial version
+ * C. Steger - 05/09/28: Added the spirals appearance mode
+ *                       and trackball support
+ */
+
+/*
+ * This program shows the Clifford torus as it rotates in 4d.  The Clifford
+ * torus is a torus lies on the "surface" of the hypersphere in 4d.  The
+ * program projects the 4d torus to 3d using either a perspective or an
+ * orthographic projection.  Of the two alternatives, the perspecitve
+ * projection looks much more appealing.  In orthographic projections the
+ * torus degenerates into a doubly covered cylinder for some angles.  The
+ * projected 3d torus can then be projected to the screen either perspectively
+ * or orthographically.  There are three display modes for the torus: mesh
+ * (wireframe), solid, or transparent.  Furthermore, the appearance of the
+ * torus can be as a solid object or as a set of see-through bands or
+ * see-through spirals.  Finally, the colors with with the torus is drawn can
+ * be set to either two-sided or to colorwheel.  In the first case, the torus
+ * is drawn with red on the outside and green on the inside.  This mode
+ * enables you to see that the torus turns inside-out as it rotates in 4d.
+ * The second mode draws the torus in a fully saturated color wheel.  This
+ * gives a very nice effect when combined with the see-through bands or
+ * see-through spirals mode.  The rotation speed for each of the six planes
+ * around which the torus rotates can be chosen.  This program is very much
+ * inspired by Thomas Banchoff's book "Beyond the Third Dimension: Geometry,
+ * Computer Graphics, and Higher Dimensions", Scientific American Library,
+ * 1990.
+ */
+
