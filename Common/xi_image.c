@@ -1,6 +1,6 @@
 #include "xi_image.h"
 #define PNG_USER_MEM_SUPPORTED
-#include <libpng12/png.h>
+#include <libpng16/png.h>
 #include <assert.h>
 #include <proto/exec.h>
 
@@ -32,7 +32,7 @@ void user_free(png_structp png_ptr, png_voidp ptr)
 
 static void user_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
 {
-	MemoryStream* stream = (MemoryStream*)png_ptr->io_ptr;
+	MemoryStream* stream = (MemoryStream*)png_get_io_ptr(png_ptr);
 	IExec->CopyMem((APTR*)(stream->memory_location + stream->position), (APTR*)data, length);
 	stream->position += length;
 }
@@ -76,7 +76,7 @@ XImage* inmemory_png_to_ximage(unsigned char *png_mem)
 
 		if (bit_depth < 8)
 		{
-			png_set_gray_1_2_4_to_8(png);
+			png_set_expand_gray_1_2_4_to_8(png);
 			bit_depth = 8;
 		}
 		else if (bit_depth > 8)

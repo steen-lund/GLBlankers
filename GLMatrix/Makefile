@@ -2,7 +2,7 @@
 TARGET  = GLMatrix.blanker
 
 # Additional linker libraries
-LIBS    = -lGL -lGLU -lpng12 -lz -lm
+LIBS    = -lGL -lGLU -lpng16 -lz -lm
 
 # Source code files used in this project
 # Add any additional files to this line
