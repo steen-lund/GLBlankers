@@ -227,140 +227,140 @@ BOOL MakeGUI( struct BlankerData *bd, struct BlankerPrefsWindowSetup *bpws )
 		bpws->eventHook     = (APTR)&GUIEventHook;
 
 		bpws->rootLayout = LayoutObject,
-                LAYOUT_Orientation, LAYOUT_VERTICAL,
-                LAYOUT_SpaceInner, TRUE,
-                LAYOUT_SpaceOuter, TRUE,
-                LAYOUT_DeferLayout, TRUE,
+				LAYOUT_Orientation, LAYOUT_VERTICAL,
+				LAYOUT_SpaceInner, TRUE,
+				LAYOUT_SpaceOuter, TRUE,
+				LAYOUT_DeferLayout, TRUE,
 
-                /* Density Slider and Integer */
-                LAYOUT_AddChild,
-                LayoutObject,
-                    LAYOUT_Orientation, LAYOUT_HORIZONTAL,
-                    /* Density Slider */
+				/* Density Slider and Integer */
+				LAYOUT_AddChild,
+				LayoutObject,
+					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
+					/* Density Slider */
 					LAYOUT_AddChild, holdtime_slider =
-                    SliderObject,
-                        GA_RelVerify, TRUE,
+					(struct Gadget*)SliderObject,
+						GA_RelVerify, TRUE,
 						GA_ID, GA_HoldTime,
-                        SLIDER_Level, 20,
+						SLIDER_Level, 20,
 						SLIDER_Min, 0,
 						SLIDER_Max, 50,
-                        SLIDER_Orientation, SLIDER_HORIZONTAL,
-                        ICA_MAP, sl_2_int_map,
-                    SliderEnd,
+						SLIDER_Orientation, SLIDER_HORIZONTAL,
+						ICA_MAP, sl_2_int_map,
+					SliderEnd,
 
-                    /* Density Integer */
+					/* Density Integer */
 					LAYOUT_AddChild, holdtime_integer =
-                    IntegerObject,
-                        GA_RelVerify, TRUE,
+					(struct Gadget*)IntegerObject,
+						GA_RelVerify, TRUE,
 						GA_ID, GA_HoldTime_Integer,
-                        INTEGER_Number, 20,
+						INTEGER_Number, 20,
 						INTEGER_Minimum, 0,
 						INTEGER_Maximum, 50,
-                        INTEGER_Arrows, FALSE,
-                        ICA_MAP, int_2_sl_map,
-                    IntegerEnd,
-                LayoutEnd,
+						INTEGER_Arrows, FALSE,
+						ICA_MAP, int_2_sl_map,
+					IntegerEnd,
+				LayoutEnd,
 
-                CHILD_Label,
-                LabelObject,
-                    LABEL_Justification, LABEL_LEFT,
+				CHILD_Label,
+				LabelObject,
+					LABEL_Justification, LABEL_LEFT,
 					LABEL_Text, "Hold Time: ",
-                LabelEnd,
+				LabelEnd,
 
-                LAYOUT_AddChild, SpaceObject, SpaceEnd,
+				LAYOUT_AddChild, SpaceObject, SpaceEnd,
 
 				/* Speed Slider and Integer */
-                LAYOUT_AddChild,
-                LayoutObject,
-                    LAYOUT_Orientation, LAYOUT_HORIZONTAL,
-                    /* Speed Slider */
+				LAYOUT_AddChild,
+				LayoutObject,
+					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
+					/* Speed Slider */
 					LAYOUT_AddChild, changetime_slider =
-                    SliderObject,
-                        GA_RelVerify, TRUE,
+					(struct Gadget*)SliderObject,
+						GA_RelVerify, TRUE,
 						GA_ID, GA_ChangeTime,
 						SLIDER_Level, 20,
-                        SLIDER_Min, 0,
+						SLIDER_Min, 0,
 						SLIDER_Max, 50,
-                        SLIDER_Orientation, SLIDER_HORIZONTAL,
-                        ICA_MAP, sl_2_int_map,
-                    SliderEnd,
+						SLIDER_Orientation, SLIDER_HORIZONTAL,
+						ICA_MAP, sl_2_int_map,
+					SliderEnd,
 
-                    /* Speed Integer */
+					/* Speed Integer */
 					LAYOUT_AddChild, changetime_integer =
-                    IntegerObject,
-                        GA_RelVerify, TRUE,
+					(struct Gadget*)IntegerObject,
+						GA_RelVerify, TRUE,
 						GA_ID, GA_ChangeTime_Integer,
 						INTEGER_Number, 20,
-                        INTEGER_Minimum, 0,
+						INTEGER_Minimum, 0,
 						INTEGER_Maximum, 50,
-                        INTEGER_Arrows, FALSE,
-                        ICA_MAP, int_2_sl_map,
-                    IntegerEnd,
-                LayoutEnd,
+						INTEGER_Arrows, FALSE,
+						ICA_MAP, int_2_sl_map,
+					IntegerEnd,
+				LayoutEnd,
 
-                CHILD_Label,
-                LabelObject,
-                    LABEL_Justification, LABEL_LEFT,
+				CHILD_Label,
+				LabelObject,
+					LABEL_Justification, LABEL_LEFT,
 					LABEL_Text, "Change Time: ",
-                LabelEnd,
+				LabelEnd,
 
-                LAYOUT_AddChild, SpaceObject, SpaceEnd,
+				LAYOUT_AddChild, SpaceObject, SpaceEnd,
 
-                /* Screen mode requester */
-                LAYOUT_AddChild, screenmode_requester =
-                GetScreenModeObject,
-                    GA_RelVerify, TRUE,
-                    GA_ID, GA_ScreenMode,
-                    GETSCREENMODE_FilterFunc, ScreenmodeHook,
-                GetScreenModeEnd,
+				/* Screen mode requester */
+				LAYOUT_AddChild, screenmode_requester =
+				(struct Gadget*)GetScreenModeObject,
+					GA_RelVerify, TRUE,
+					GA_ID, GA_ScreenMode,
+					GETSCREENMODE_FilterFunc, ScreenmodeHook,
+				GetScreenModeEnd,
 
-                CHILD_Label,
-                LabelObject,
-                    LABEL_Justification, LABEL_LEFT,
-                    LABEL_Text, "Screen Mode: ",
-                LabelEnd,
+				CHILD_Label,
+				LabelObject,
+					LABEL_Justification, LABEL_LEFT,
+					LABEL_Text, "Screen Mode: ",
+				LabelEnd,
 
-                LAYOUT_AddChild, SpaceObject, SpaceEnd,
+				LAYOUT_AddChild, SpaceObject, SpaceEnd,
 
-                /* Check boxes */
-                LAYOUT_AddChild,
-                LayoutObject,
-                    LAYOUT_Orientation, LAYOUT_HORIZONTAL,
-                    LAYOUT_HorizAlignment, LALIGN_CENTER,
-                    LAYOUT_EvenSize, TRUE,
+				/* Check boxes */
+				LAYOUT_AddChild,
+				LayoutObject,
+					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
+					LAYOUT_HorizAlignment, LALIGN_CENTER,
+					LAYOUT_EvenSize, TRUE,
 
-                    /* Fog */
-                    LAYOUT_AddChild, fog_checkbox =
-                    CheckBoxObject,
-                        GA_ID, GA_Fog,
-                        GA_Text, "_Fog",
-                        GA_Selected, TRUE,
-                        GA_RelVerify, TRUE,
-                    CheckBoxEnd,
+					/* Fog */
+					LAYOUT_AddChild, fog_checkbox =
+					(struct Gadget*)CheckBoxObject,
+						GA_ID, GA_Fog,
+						GA_Text, "_Fog",
+						GA_Selected, TRUE,
+						GA_RelVerify, TRUE,
+					CheckBoxEnd,
 
-                    /* Wave */
+					/* Wave */
 					LAYOUT_AddChild, texture_checkbox =
-                    CheckBoxObject,
+					(struct Gadget*)CheckBoxObject,
 						GA_ID, GA_Texture,
 						GA_Text, "_Texture",
-                        GA_Selected, TRUE,
-                        GA_RelVerify, TRUE,
-                    CheckBoxEnd,
+						GA_Selected, TRUE,
+						GA_RelVerify, TRUE,
+					CheckBoxEnd,
 
-                LayoutEnd, /* End Check Boxes */
-             LayoutEnd; /* End Main Layout */
+				LayoutEnd, /* End Check Boxes */
+			LayoutEnd; /* End Main Layout */
 
 		if (bpws->rootLayout != NULL)
 		{
 			ica_targets[0].ti_Data = (ULONG)holdtime_integer;
-			IIntuition->SetAttrsA(holdtime_slider, ica_targets);
+			IIntuition->SetAttrsA((Object*)holdtime_slider, ica_targets);
 			ica_targets[0].ti_Data = (ULONG)holdtime_slider;
-			IIntuition->SetAttrsA(holdtime_integer, ica_targets);
+			IIntuition->SetAttrsA((Object*)holdtime_integer, ica_targets);
 
 			ica_targets[0].ti_Data = (ULONG)changetime_integer;
-			IIntuition->SetAttrsA(changetime_slider, ica_targets);
+			IIntuition->SetAttrsA((Object*)changetime_slider, ica_targets);
 			ica_targets[0].ti_Data = (ULONG)changetime_slider;
-			IIntuition->SetAttrsA(changetime_integer, ica_targets);
+			IIntuition->SetAttrsA((Object*)changetime_integer, ica_targets);
 		}
 
 		result = TRUE;
@@ -394,28 +394,28 @@ void GUIEventFunc( struct Hook *hook, struct BlankerModuleIFace *Self, struct Bl
 	    {
 			case GA_HoldTime:
 			case GA_HoldTime_Integer:
-				IIntuition->GetAttr(INTEGER_Number, holdtime_integer, &attr);
+				IIntuition->GetAttr(INTEGER_Number, (Object*)holdtime_integer, &attr);
 				bd->holdtime = attr;
 				refetch |= TRUE;
 				break;
 			case GA_ChangeTime:
 			case GA_ChangeTime_Integer:
-				IIntuition->GetAttr(INTEGER_Number, changetime_integer, &attr);
+				IIntuition->GetAttr(INTEGER_Number, (Object*)changetime_integer, &attr);
 				bd->changetime = attr;
 				refetch |= TRUE;
 				break;
 			case GA_ScreenMode:
 				RequestScreenMode((Object*)screenmode_requester, bd->WinInfo.window);
-				IIntuition->GetAttr(GETSCREENMODE_DisplayID, screenmode_requester, &attr);
+				IIntuition->GetAttr(GETSCREENMODE_DisplayID, (Object*)screenmode_requester, &attr);
 				bd->screenmodeID = attr;
 				break;
 			case GA_Fog:
-				IIntuition->GetAttr(GA_Selected, fog_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)fog_checkbox, &attr);
 				bd->dofog = (BOOL)attr;
 				refetch |= TRUE;
 				break;
 			case GA_Texture:
-				IIntuition->GetAttr(GA_Selected, texture_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)texture_checkbox, &attr);
 				bd->dotexture = (BOOL)attr;
 				refetch |= TRUE;
 				break;

@@ -680,7 +680,7 @@ rotate_colors (Display *dpy, Colormap cmap,
 	       XColor *colors, int ncolors, int distance)
 {
   int i;
-  XColor *colors2 = (XColor *) IExec->AllocVec(sizeof(*colors2) * ncolors, MEMF_CLEAR);
+  XColor *colors2 = (XColor *) IExec->AllocVecTags(sizeof(*colors2) * ncolors, AVT_ClearWithValue, 0, TAG_DONE);
   if (ncolors < 2) return;
   distance = distance % ncolors;
   for (i = 0; i < ncolors; i++)

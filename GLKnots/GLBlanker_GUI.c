@@ -265,7 +265,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
 					/* Segments Slider */
 					LAYOUT_AddChild, Segments_slider =
-					SliderObject,
+					(struct Gadget*)SliderObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Segments,
 						SLIDER_Level, 400,
@@ -277,7 +277,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 					/* Segments Integer */
 					LAYOUT_AddChild, Segments_integer =
-					IntegerObject,
+					(struct Gadget*)IntegerObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Segments_Integer,
 						INTEGER_Number, 400,
@@ -302,7 +302,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
                     /* Speed Slider */
 					LAYOUT_AddChild, Duration_slider =
-					SliderObject,
+					(struct Gadget*)SliderObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Duration,
 						SLIDER_Level, 8,
@@ -314,7 +314,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 					/* Duration Integer */
 					LAYOUT_AddChild, Duration_integer =
-					IntegerObject,
+					(struct Gadget*)IntegerObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Duration_Integer,
 						INTEGER_Number, 8,
@@ -342,7 +342,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
                     /* Fog */
 					LAYOUT_AddChild, SpinX_checkbox =
-					CheckBoxObject,
+					(struct Gadget*)CheckBoxObject,
 						GA_ID, GA_SpinX,
 						GA_Text, "Spin_X",
 						GA_Selected, TRUE,
@@ -351,7 +351,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
                     /* Wave */
 					LAYOUT_AddChild, SpinY_checkbox =
-					CheckBoxObject,
+					(struct Gadget*)CheckBoxObject,
 						GA_ID, GA_SpinY,
 						GA_Text, "Spin_Y",
 						GA_Selected, TRUE,
@@ -360,7 +360,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
                     /* Rotate */
 					LAYOUT_AddChild, SpinZ_checkbox =
-					CheckBoxObject,
+					(struct Gadget*)CheckBoxObject,
 						GA_ID, GA_SpinZ,
 						GA_Text, "Spin_Z",
 						GA_Selected, TRUE,
@@ -369,7 +369,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
                     /* Invert alpha */
 					LAYOUT_AddChild, Wander_checkbox =
-					CheckBoxObject,
+					(struct Gadget*)CheckBoxObject,
 						GA_ID, GA_Wander,
 						GA_Text, "_Wander",
 						GA_Selected, TRUE,
@@ -382,7 +382,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
                 /* Screen mode requester */
 				LAYOUT_AddChild, screenmode_requester =
-                GetScreenModeObject,
+                (struct Gadget*)GetScreenModeObject,
                     GA_RelVerify, TRUE,
                     GA_ID, GA_ScreenMode,
                     GETSCREENMODE_FilterFunc, ScreenmodeHook,
@@ -398,14 +398,14 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 		if (bpws->rootLayout != NULL)
 		{
 			ica_targets[0].ti_Data = (ULONG)Segments_integer;
-			IIntuition->SetAttrsA(Segments_slider, ica_targets);
+			IIntuition->SetAttrsA((Object*)Segments_slider, ica_targets);
 			ica_targets[0].ti_Data = (ULONG)Segments_slider;
-			IIntuition->SetAttrsA(Segments_integer, ica_targets);
+			IIntuition->SetAttrsA((Object*)Segments_integer, ica_targets);
 
 			ica_targets[0].ti_Data = (ULONG)Duration_integer;
-			IIntuition->SetAttrsA(Duration_slider, ica_targets);
+			IIntuition->SetAttrsA((Object*)Duration_slider, ica_targets);
 			ica_targets[0].ti_Data = (ULONG)Duration_slider;
-			IIntuition->SetAttrsA(Duration_integer, ica_targets);
+			IIntuition->SetAttrsA((Object*)Duration_integer, ica_targets);
 		}
 
 		result = TRUE;
@@ -441,38 +441,38 @@ void GUIEventFunc(struct Hook* hook, struct BlankerModuleIFace* Self, struct Bla
 	    {
 			case GA_Segments:
 			case GA_Segments_Integer:
-				IIntuition->GetAttr(INTEGER_Number, Segments_integer, &attr);
+				IIntuition->GetAttr(INTEGER_Number, (Object*)Segments_integer, &attr);
 				bd->segments = attr;
 				refetch |= TRUE;
 				break;
 			case GA_Duration:
 			case GA_Duration_Integer:
-				IIntuition->GetAttr(INTEGER_Number, Duration_integer, &attr);
+				IIntuition->GetAttr(INTEGER_Number, (Object*)Duration_integer, &attr);
 				bd->duration = attr;
 				refetch |= TRUE;
 				break;
 			case GA_ScreenMode:
 				RequestScreenMode((Object*)screenmode_requester, bd->WinInfo.window);
-				IIntuition->GetAttr(GETSCREENMODE_DisplayID, screenmode_requester, &attr);
+				IIntuition->GetAttr(GETSCREENMODE_DisplayID, (Object*)screenmode_requester, &attr);
 				bd->screenmodeID = attr;
 				break;
 			case GA_SpinX:
-				IIntuition->GetAttr(GA_Selected, SpinX_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)SpinX_checkbox, &attr);
 				bd->spinX = (BOOL)attr;
 				refetch |= TRUE;
 				break;
 			case GA_SpinY:
-				IIntuition->GetAttr(GA_Selected, SpinY_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)SpinY_checkbox, &attr);
 				bd->spinY = (BOOL)attr;
 				refetch |= TRUE;
 				break;
 			case GA_SpinZ:
-				IIntuition->GetAttr(GA_Selected, SpinZ_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)SpinZ_checkbox, &attr);
 				bd->spinZ = (BOOL)attr;
 				refetch |= TRUE;
 				break;
 			case GA_Wander:
-				IIntuition->GetAttr(GA_Selected, Wander_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)Wander_checkbox, &attr);
 				bd->wander = (BOOL)attr;
 				refetch |= TRUE;
 				break;

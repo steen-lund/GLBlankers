@@ -242,7 +242,7 @@ BOOL ScreenmodeCallback(struct Hook* hook, VOID* object, ULONG modeid)
 /// create_chooser_list
 struct List* create_chooser_list(char *array[])
 {
-	struct List* list = (struct List *)IExec->AllocVec(sizeof(struct List), MEMF_CLEAR);
+	struct List* list = (struct List *)IExec->AllocVecTags(sizeof(struct List), AVT_ClearWithValue, 0, TAG_DONE);
 
 	if (list != NULL)
 	{
@@ -297,14 +297,14 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 		bpws->eventHook     = (APTR)&GUIEventHook;
 
 		bpws->rootLayout = LayoutObject,
-                LAYOUT_Orientation, LAYOUT_VERTICAL,
-                LAYOUT_SpaceInner, TRUE,
-                LAYOUT_SpaceOuter, TRUE,
-                LAYOUT_DeferLayout, TRUE,
+				LAYOUT_Orientation, LAYOUT_VERTICAL,
+				LAYOUT_SpaceInner, TRUE,
+				LAYOUT_SpaceOuter, TRUE,
+				LAYOUT_DeferLayout, TRUE,
 
 				/* Display mode Chooser */
 				LAYOUT_AddChild, displaymode_chooser =
-				ChooserObject,
+				(struct Gadget*)ChooserObject,
 					GA_RelVerify, TRUE,
 					GA_ID, GA_DisplayMode,
 					CHOOSER_PopUp, TRUE,
@@ -321,7 +321,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 				/* Appearance chooser */
 				LAYOUT_AddChild, appearance_chooser =
-				ChooserObject,
+				(struct Gadget*)ChooserObject,
 					GA_RelVerify, TRUE,
 					GA_ID, GA_Appearance,
 					CHOOSER_PopUp, TRUE,
@@ -338,7 +338,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 				/* Color chooser */
 				LAYOUT_AddChild, color_chooser =
-				ChooserObject,
+				(struct Gadget*)ChooserObject,
 					GA_RelVerify, TRUE,
 					GA_ID, GA_Colors,
 					CHOOSER_PopUp, TRUE,
@@ -355,7 +355,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 				/* 3D Projection chooser */
 				LAYOUT_AddChild, projection_3d_chooser =
-				ChooserObject,
+				(struct Gadget*)ChooserObject,
 					GA_RelVerify, TRUE,
 					GA_ID, GA_3D_Projection,
 					CHOOSER_PopUp, TRUE,
@@ -372,7 +372,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 				/* 4D Projection chooser */
 				LAYOUT_AddChild, projection_4d_chooser =
-				ChooserObject,
+				(struct Gadget*)ChooserObject,
 					GA_RelVerify, TRUE,
 					GA_ID, GA_4D_Projection,
 					CHOOSER_PopUp, TRUE,
@@ -387,20 +387,20 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 				LAYOUT_AddChild, SpaceObject, SpaceEnd,
 
-                /* Screen mode requester */
+				/* Screen mode requester */
 				LAYOUT_AddChild, screenmode_requester =
-                GetScreenModeObject,
-                    GA_RelVerify, TRUE,
-                    GA_ID, GA_ScreenMode,
-                    GETSCREENMODE_FilterFunc, ScreenmodeHook,
-                GetScreenModeEnd,
+				(struct Gadget*)GetScreenModeObject,
+					GA_RelVerify, TRUE,
+					GA_ID, GA_ScreenMode,
+					GETSCREENMODE_FilterFunc, ScreenmodeHook,
+				GetScreenModeEnd,
 
-                CHILD_Label,
-                LabelObject,
-                    LABEL_Justification, LABEL_LEFT,
-                    LABEL_Text, "Screen Mode: ",
-                LabelEnd,
-             LayoutEnd; /* End Main Layout */
+				CHILD_Label,
+				LabelObject,
+					LABEL_Justification, LABEL_LEFT,
+					LABEL_Text, "Screen Mode: ",
+				LabelEnd,
+			LayoutEnd; /* End Main Layout */
 
 		result = TRUE;
 	}
@@ -459,43 +459,43 @@ void GUIEventFunc(struct Hook* hook, struct BlankerModuleIFace* Self, struct Bla
 	uint32 refetch;
 	uint32 attr = 0;
 
-    if (( Self != NULL ) && ( event != NULL ))
-    {
-	    bd = (struct BlankerData *)((uint32)Self - Self->Data.NegativeSize);
-	    gadgetID = event->result & WMHI_GADGETMASK;
+	if (( Self != NULL ) && ( event != NULL ))
+	{
+		bd = (struct BlankerData *)((uint32)Self - Self->Data.NegativeSize);
+		gadgetID = event->result & WMHI_GADGETMASK;
 
 		refetch = bd->refetchSettings;
 
 	    switch( gadgetID )
 	    {
 			case GA_DisplayMode:
-				IIntuition->GetAttr(CHOOSER_Selected, displaymode_chooser, &attr);
+				IIntuition->GetAttr(CHOOSER_Selected, (Object*)displaymode_chooser, &attr);
 				bd->displaymode = attr;
 				refetch |= TRUE;
 				break;
 			case GA_Appearance:
-				IIntuition->GetAttr(CHOOSER_Selected, appearance_chooser, &attr);
+				IIntuition->GetAttr(CHOOSER_Selected, (Object*)appearance_chooser, &attr);
 				bd->appearance = attr;
 				refetch |= TRUE;
 				break;
 			case GA_Colors:
-				IIntuition->GetAttr(CHOOSER_Selected, color_chooser, &attr);
+				IIntuition->GetAttr(CHOOSER_Selected, (Object*)color_chooser, &attr);
 				bd->colors = attr;
 				refetch |= TRUE;
 				break;
 			case GA_3D_Projection:
-				IIntuition->GetAttr(CHOOSER_Selected, projection_3d_chooser, &attr);
+				IIntuition->GetAttr(CHOOSER_Selected, (Object*)projection_3d_chooser, &attr);
 				bd->projection3d = attr;
 				refetch |= TRUE;
 				break;
 			case GA_4D_Projection:
-				IIntuition->GetAttr(CHOOSER_Selected, projection_4d_chooser, &attr);
+				IIntuition->GetAttr(CHOOSER_Selected, (Object*)projection_4d_chooser, &attr);
 				bd->projection4d = attr;
 				refetch |= TRUE;
 				break;
 			case GA_ScreenMode:
 				RequestScreenMode((Object*)screenmode_requester, bd->WinInfo.window);
-				IIntuition->GetAttr(GETSCREENMODE_DisplayID, screenmode_requester, &attr);
+				IIntuition->GetAttr(GETSCREENMODE_DisplayID, (Object*)screenmode_requester, &attr);
 				bd->screenmodeID = attr;
 				break;
 		    default:

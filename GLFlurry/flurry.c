@@ -98,7 +98,7 @@ static
 flurry_info_t *new_flurry_info(global_info_t *global, int streams, ColorModes colour, float thickness, float speed, double bf)
 {
     int i,k;
-	flurry_info_t *flurry = (flurry_info_t *)IExec->AllocVec(sizeof(flurry_info_t), MEMF_CLEAR);
+	flurry_info_t *flurry = (flurry_info_t *)IExec->AllocVecTags(sizeof(flurry_info_t), AVT_ClearWithValue, 0, TAG_DONE);
 
     if (!flurry) return NULL;
 
@@ -113,16 +113,16 @@ flurry_info_t *new_flurry_info(global_info_t *global, int streams, ColorModes co
     flurry->currentColorMode = colour;
     flurry->briteFactor = bf;
 
-	flurry->s = IExec->AllocVec(sizeof(SmokeV), MEMF_CLEAR);
+	flurry->s = IExec->AllocVecTags(sizeof(SmokeV), AVT_ClearWithValue, 0, TAG_DONE);
     InitSmoke(flurry->s);
 
-	flurry->star = IExec->AllocVec(sizeof(Star), MEMF_CLEAR);
+	flurry->star = IExec->AllocVecTags(sizeof(Star), AVT_ClearWithValue, 0, TAG_DONE);
     InitStar(flurry->star);
     flurry->star->rotSpeed = speed;
 
     for (i = 0;i < MAX_SPARKS; i++)
     {
-		flurry->spark[i] = IExec->AllocVec(sizeof(Spark), MEMF_CLEAR);
+		flurry->spark[i] = IExec->AllocVecTags(sizeof(Spark), AVT_ClearWithValue, 0, TAG_DONE);
 		InitSpark(flurry->spark[i]);
 		flurry->spark[i]->mystery = 1800 * (i + 1) / 13; /* 100 * (i + 1) / (flurry->numStreams + 1); */
 		UpdateSpark(global, flurry, flurry->spark[i]);

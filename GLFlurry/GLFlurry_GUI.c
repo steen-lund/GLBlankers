@@ -173,7 +173,7 @@ BOOL MakeGUI( struct BlankerData *bd, struct BlankerPrefsWindowSetup *bpws )
 		struct Node *node;
 		int i;
 
-		styles_list = (struct List *)IExec->AllocVec(sizeof(struct List), MEMF_CLEAR);
+		styles_list = (struct List *)IExec->AllocVecTags(sizeof(struct List), AVT_ClearWithValue, 0, TAG_DONE);
 
 		if (styles_list != NULL)
 		{
@@ -192,45 +192,45 @@ BOOL MakeGUI( struct BlankerData *bd, struct BlankerPrefsWindowSetup *bpws )
 		bpws->eventHook     = (APTR)&GUIEventHook;
 
 		bpws->rootLayout = LayoutObject,
-                LAYOUT_Orientation, LAYOUT_VERTICAL,
-                LAYOUT_SpaceInner, TRUE,
-                LAYOUT_SpaceOuter, TRUE,
-                LAYOUT_DeferLayout, TRUE,
+				LAYOUT_Orientation, LAYOUT_VERTICAL,
+				LAYOUT_SpaceInner, TRUE,
+				LAYOUT_SpaceOuter, TRUE,
+				LAYOUT_DeferLayout, TRUE,
 
 				/* Style Chooser */
 				LAYOUT_AddChild, style_chooser =
-                ChooserObject,
-                    GA_RelVerify, TRUE,
+				(struct Gadget*)ChooserObject,
+					GA_RelVerify, TRUE,
 					GA_ID, GA_Style,
-                    CHOOSER_PopUp, TRUE,
+					CHOOSER_PopUp, TRUE,
 					CHOOSER_Labels, styles_list,
-                ChooserEnd,
+				ChooserEnd,
 
-                CHILD_Label,
-                LabelObject,
-                    LABEL_Justification, LABEL_LEFT,
+				CHILD_Label,
+				LabelObject,
+					LABEL_Justification, LABEL_LEFT,
 					LABEL_Text, "Style: ",
-                LabelEnd,
+				LabelEnd,
 
-                LAYOUT_AddChild, SpaceObject, SpaceEnd,
+				LAYOUT_AddChild, SpaceObject, SpaceEnd,
 
-                /* Screen mode requester */
-                LAYOUT_AddChild, screenmode_requester =
-                GetScreenModeObject,
-                    GA_RelVerify, TRUE,
-                    GA_ID, GA_ScreenMode,
-                    GETSCREENMODE_FilterFunc, ScreenmodeHook,
-                GetScreenModeEnd,
+				/* Screen mode requester */
+				LAYOUT_AddChild, screenmode_requester =
+				(struct Gadget*)GetScreenModeObject,
+					GA_RelVerify, TRUE,
+					GA_ID, GA_ScreenMode,
+					GETSCREENMODE_FilterFunc, ScreenmodeHook,
+				GetScreenModeEnd,
 
-                CHILD_Label,
-                LabelObject,
-                    LABEL_Justification, LABEL_LEFT,
-                    LABEL_Text, "Screen Mode: ",
-                LabelEnd,
+				CHILD_Label,
+				LabelObject,
+					LABEL_Justification, LABEL_LEFT,
+					LABEL_Text, "Screen Mode: ",
+				LabelEnd,
 
-                LAYOUT_AddChild, SpaceObject, SpaceEnd,
+				LAYOUT_AddChild, SpaceObject, SpaceEnd,
 
-             LayoutEnd; /* End Main Layout */
+				LayoutEnd; /* End Main Layout */
 
 		result = TRUE;
 	}
@@ -258,31 +258,31 @@ void GUIEventFunc( struct Hook *hook, struct BlankerModuleIFace *Self, struct Bl
 	uint32 refetch;
 	uint32 attr = 0;
 
-    if (( Self != NULL ) && ( event != NULL ))
-    {
-	    bd = (struct BlankerData *)((uint32)Self - Self->Data.NegativeSize);
-	    gadgetID = event->result & WMHI_GADGETMASK;
+	if (( Self != NULL ) && ( event != NULL ))
+	{
+		bd = (struct BlankerData *)((uint32)Self - Self->Data.NegativeSize);
+		gadgetID = event->result & WMHI_GADGETMASK;
 
 		refetch = bd->refetchSettings;
 
-	    switch( gadgetID )
-	    {
+		switch( gadgetID )
+		{
 			case GA_Style:
-				IIntuition->GetAttr(CHOOSER_Selected, style_chooser, &attr);
+				IIntuition->GetAttr(CHOOSER_Selected, (Object*)style_chooser, &attr);
 				bd->style = attr;
 				refetch |= TRUE;
 				break;
 			case GA_ScreenMode:
 				RequestScreenMode((Object*)screenmode_requester, bd->WinInfo.window);
-				IIntuition->GetAttr((ULONG)GETSCREENMODE_DisplayID, screenmode_requester, &attr);
+				IIntuition->GetAttr((ULONG)GETSCREENMODE_DisplayID, (Object*)screenmode_requester, &attr);
 				bd->screenmodeID = attr;
 				break;
 			default:
 				break;
 		} /* switch gadget */
 
-	    bd->refetchSettings = refetch;
-    }
+		bd->refetchSettings = refetch;
+	}
 }
 
 /// GUI Idcmp Func

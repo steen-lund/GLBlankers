@@ -222,25 +222,25 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 		bpws->eventHook     = (APTR)&GUIEventHook;
 
 		bpws->rootLayout = LayoutObject,
-                LAYOUT_Orientation, LAYOUT_VERTICAL,
-                LAYOUT_SpaceInner, TRUE,
-                LAYOUT_SpaceOuter, TRUE,
-                LAYOUT_DeferLayout, TRUE,
-                /* Screen mode requester */
+				LAYOUT_Orientation, LAYOUT_VERTICAL,
+				LAYOUT_SpaceInner, TRUE,
+				LAYOUT_SpaceOuter, TRUE,
+				LAYOUT_DeferLayout, TRUE,
+				/* Screen mode requester */
 				LAYOUT_AddChild, screenmode_requester =
-                GetScreenModeObject,
-                    GA_RelVerify, TRUE,
-                    GA_ID, GA_ScreenMode,
-                    GETSCREENMODE_FilterFunc, ScreenmodeHook,
-                GetScreenModeEnd,
+				(struct Gadget*)GetScreenModeObject,
+					GA_RelVerify, TRUE,
+					GA_ID, GA_ScreenMode,
+					GETSCREENMODE_FilterFunc, ScreenmodeHook,
+				GetScreenModeEnd,
 
-                CHILD_Label,
-                LabelObject,
-                    LABEL_Justification, LABEL_LEFT,
-                    LABEL_Text, "Screen Mode: ",
-                LabelEnd,
+				CHILD_Label,
+				LabelObject,
+					LABEL_Justification, LABEL_LEFT,
+					LABEL_Text, "Screen Mode: ",
+				LabelEnd,
 
-             LayoutEnd; /* End Main Layout */
+			LayoutEnd; /* End Main Layout */
 
 		result = TRUE;
 	}
@@ -275,7 +275,7 @@ void GUIEventFunc(struct Hook* hook, struct BlankerModuleIFace* Self, struct Bla
 	    {
 		    case GA_ScreenMode:
 				RequestScreenMode((Object*)screenmode_requester, bd->WinInfo.window);
-				IIntuition->GetAttr(GETSCREENMODE_DisplayID, screenmode_requester, &attr);
+				IIntuition->GetAttr(GETSCREENMODE_DisplayID, (Object*)screenmode_requester, &attr);
 				bd->screenmodeID = attr;
 				break;
 		    default:

@@ -129,7 +129,7 @@ void init_glschool(struct BlankerData* bd)
 	sc->drawBBox = DoDrawBBox;
 
 	sc->nColors = 360;
-	sc->colors = (XColor *)IExec->AllocVec(sc->nColors * sizeof(XColor), MEMF_PRIVATE | MEMF_CLEAR);
+	sc->colors = (XColor *)IExec->AllocVecTags(sc->nColors * sizeof(XColor), AVT_ClearWithValue, 0, AVT_Type, MEMF_PRIVATE, TAG_DONE);
 	make_color_ramp(0, 0,
 					0.0, 1.0, 1.0,
 					359.0, 1.0, 1.0,

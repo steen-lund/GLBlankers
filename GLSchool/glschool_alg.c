@@ -165,12 +165,12 @@ initSchool(int nFish, double accLimit, double maxV, double minV, double distExp,
 {
 	School	*s = (School *)0;
 
-	if ((s = (School *)IExec->AllocVec(sizeof(School), MEMF_PRIVATE | MEMF_CLEAR)) == (School *)0) {
+	if ((s = (School *)IExec->AllocVecTags(sizeof(School), AVT_Type, MEMF_PRIVATE, AVT_ClearWithValue, 0, TAG_DONE)) == (School *)0) {
 		/*perror("initSchool School allocation failed: ");*/
 		return s;
 	}
 
-	if ((SCHOOL_FISHES(s) = (Fish *)IExec->AllocVec(sizeof(Fish)*nFish, MEMF_PRIVATE | MEMF_CLEAR)) == (Fish *)0) {
+	if ((SCHOOL_FISHES(s) = (Fish *)IExec->AllocVecTags(sizeof(Fish)*nFish, AVT_Type, MEMF_PRIVATE, AVT_ClearWithValue, 0, TAG_DONE)) == (Fish *)0) {
 		/*perror("initSchool Fish array allocation failed: ");*/
 		IExec->FreeVec(s);
 		return (School *)0;

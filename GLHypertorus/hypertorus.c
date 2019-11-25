@@ -753,8 +753,8 @@ void init_hypertorus(struct BlankerData* bd)
  */
 void draw_hypertorus()
 {
-  hypertorusstruct *hp;
-  hp = &hyper;
+  // hypertorusstruct *hp;
+  // hp = &hyper;
 
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();

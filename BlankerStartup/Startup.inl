@@ -810,7 +810,7 @@ uint32 OpenLibraries( void )
 	IMiniGL =(struct MiniGLIFace*)IExec->GetInterface(MiniGLBase, "main", 1, NULL);
 	if (IMiniGL == NULL) return FALSE;
 
-	TimeIO = IExec->AllocVec(sizeof(struct TimeRequest), MEMF_CLEAR);
+	TimeIO = IExec->AllocVecTags(sizeof(struct TimeRequest), AVT_ClearWithValue, 0, TAG_DONE);
 	IExec->OpenDevice(TIMERNAME, UNIT_MICROHZ, (struct IORequest*)TimeIO, 0);
 	TimerBase = TimeIO->Request.io_Device;
 	ITimer = (struct TimerIFace *)IExec->GetInterface((struct Library*)TimerBase, "main", 1, NULL);

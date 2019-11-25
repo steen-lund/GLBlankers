@@ -73,20 +73,20 @@ struct List *encodings_list;
 
 struct TagItem sl_2_int_map[] =
 {
-    {SLIDER_Level, INTEGER_Number},
-    {TAG_DONE}
+	{SLIDER_Level, INTEGER_Number},
+	{TAG_DONE}
 };
 
 struct TagItem int_2_sl_map[] =
 {
-    {INTEGER_Number, SLIDER_Level},
-    {TAG_DONE}
+	{INTEGER_Number, SLIDER_Level},
+	{TAG_DONE}
 };
 
 struct TagItem ica_targets[] =
 {
-    {ICA_TARGET, 0},
-    {TAG_DONE}
+	{ICA_TARGET, 0},
+	{TAG_DONE}
 };
 
 char *encodings[] = {"Matrix", "DNA", "Binary", "Hexadecimal", "decimal", NULL };
@@ -229,24 +229,24 @@ BOOL ScreenmodeCallback(struct Hook* hook, VOID* object, ULONG modeid)
 	temp_mode_ID = modeid;
 	GUIModeID = IMiniGL->GetSupportedScreenModes(GUIMGLCallback);
 	if (GUIModeID != MGL_SM_BESTMODE)
-    {
-        return TRUE;
-    }
+	{
+		return TRUE;
+	}
 
-    return FALSE;
+	return FALSE;
 }
 
 void free_chooser_list(struct List *list)
 {
-    struct Node *node, *nextnode;
+	struct Node *node, *nextnode;
 
-    node = list->lh_Head;
+	node = list->lh_Head;
 	while ((nextnode = node->ln_Succ))
-    {
-        IChooser->FreeChooserNode(node);
-        node = nextnode;
-    }
-    IExec->NewList(list);
+	{
+		IChooser->FreeChooserNode(node);
+		node = nextnode;
+	}
+	IExec->NewList(list);
 }
 
 BOOL MakeGUI( struct BlankerData *bd, struct BlankerPrefsWindowSetup *bpws )
@@ -258,7 +258,7 @@ BOOL MakeGUI( struct BlankerData *bd, struct BlankerPrefsWindowSetup *bpws )
 		struct Node *node;
 		int i;
 
-		encodings_list = (struct List *)IExec->AllocVec(sizeof(struct List), MEMF_CLEAR);
+		encodings_list = (struct List *)IExec->AllocVecTags(sizeof(struct List), AVT_ClearWithValue, 0, TAG_DONE);
 
 		if (encodings_list != NULL)
 		{
@@ -277,175 +277,175 @@ BOOL MakeGUI( struct BlankerData *bd, struct BlankerPrefsWindowSetup *bpws )
 		bpws->eventHook     = (APTR)&GUIEventHook;
 
 		bpws->rootLayout = LayoutObject,
-                LAYOUT_Orientation, LAYOUT_VERTICAL,
-                LAYOUT_SpaceInner, TRUE,
-                LAYOUT_SpaceOuter, TRUE,
-                LAYOUT_DeferLayout, TRUE,
+				LAYOUT_Orientation, LAYOUT_VERTICAL,
+				LAYOUT_SpaceInner, TRUE,
+				LAYOUT_SpaceOuter, TRUE,
+				LAYOUT_DeferLayout, TRUE,
 
-                /* Density Slider and Integer */
-                LAYOUT_AddChild,
-                LayoutObject,
-                    LAYOUT_Orientation, LAYOUT_HORIZONTAL,
-                    /* Density Slider */
-                    LAYOUT_AddChild, density_slider =
-                    SliderObject,
-                        GA_RelVerify, TRUE,
-                        GA_ID, GA_Density,
-                        SLIDER_Level, 20,
-                        SLIDER_Min, 2,
-                        SLIDER_Max, 200,
-                        SLIDER_Orientation, SLIDER_HORIZONTAL,
-                        ICA_MAP, sl_2_int_map,
-                    SliderEnd,
+				/* Density Slider and Integer */
+				LAYOUT_AddChild,
+				LayoutObject,
+					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
+					/* Density Slider */
+					LAYOUT_AddChild, density_slider =
+					(struct Gadget*)SliderObject,
+						GA_RelVerify, TRUE,
+						GA_ID, GA_Density,
+						SLIDER_Level, 20,
+						SLIDER_Min, 2,
+						SLIDER_Max, 200,
+						SLIDER_Orientation, SLIDER_HORIZONTAL,
+						ICA_MAP, sl_2_int_map,
+					SliderEnd,
 
-                    /* Density Integer */
-                    LAYOUT_AddChild, density_integer =
-                    IntegerObject,
-                        GA_RelVerify, TRUE,
-                        GA_ID, GA_Density_Integer,
-                        INTEGER_Number, 20,
-                        INTEGER_Minimum, 2,
-                        INTEGER_Maximum, 200,
-                        INTEGER_Arrows, FALSE,
-                        ICA_MAP, int_2_sl_map,
-                    IntegerEnd,
-                LayoutEnd,
+					/* Density Integer */
+					LAYOUT_AddChild, density_integer =
+					(struct Gadget*)IntegerObject,
+						GA_RelVerify, TRUE,
+						GA_ID, GA_Density_Integer,
+						INTEGER_Number, 20,
+						INTEGER_Minimum, 2,
+						INTEGER_Maximum, 200,
+						INTEGER_Arrows, FALSE,
+						ICA_MAP, int_2_sl_map,
+					IntegerEnd,
+				LayoutEnd,
 
-                CHILD_Label,
-                LabelObject,
-                    LABEL_Justification, LABEL_LEFT,
-                    LABEL_Text, "Density: ",
-                LabelEnd,
+				CHILD_Label,
+				LabelObject,
+					LABEL_Justification, LABEL_LEFT,
+					LABEL_Text, "Density: ",
+				LabelEnd,
 
-                LAYOUT_AddChild, SpaceObject, SpaceEnd,
+				LAYOUT_AddChild, SpaceObject, SpaceEnd,
 
 				/* Speed Slider and Integer */
-                LAYOUT_AddChild,
-                LayoutObject,
-                    LAYOUT_Orientation, LAYOUT_HORIZONTAL,
-                    /* Speed Slider */
-                    LAYOUT_AddChild, speed_slider =
-                    SliderObject,
-                        GA_RelVerify, TRUE,
-                        GA_ID, GA_Speed,
-                        SLIDER_Level, 100,
-                        SLIDER_Min, 0,
-                        SLIDER_Max, 300,
-                        SLIDER_Orientation, SLIDER_HORIZONTAL,
-                        ICA_MAP, sl_2_int_map,
-                    SliderEnd,
+				LAYOUT_AddChild,
+				LayoutObject,
+					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
+					/* Speed Slider */
+					LAYOUT_AddChild, speed_slider =
+					(struct Gadget*)SliderObject,
+						GA_RelVerify, TRUE,
+						GA_ID, GA_Speed,
+						SLIDER_Level, 100,
+						SLIDER_Min, 0,
+						SLIDER_Max, 300,
+						SLIDER_Orientation, SLIDER_HORIZONTAL,
+						ICA_MAP, sl_2_int_map,
+					SliderEnd,
 
-                    /* Speed Integer */
-                    LAYOUT_AddChild, speed_integer =
-                    IntegerObject,
-                        GA_RelVerify, TRUE,
-                        GA_ID, GA_Speed_Integer,
-                        INTEGER_Number, 100,
-                        INTEGER_Minimum, 0,
-                        INTEGER_Maximum, 300,
-                        INTEGER_Arrows, FALSE,
-                        ICA_MAP, int_2_sl_map,
-                    IntegerEnd,
-                LayoutEnd,
+					/* Speed Integer */
+					LAYOUT_AddChild, speed_integer =
+					(struct Gadget*)IntegerObject,
+						GA_RelVerify, TRUE,
+						GA_ID, GA_Speed_Integer,
+						INTEGER_Number, 100,
+						INTEGER_Minimum, 0,
+						INTEGER_Maximum, 300,
+						INTEGER_Arrows, FALSE,
+						ICA_MAP, int_2_sl_map,
+					IntegerEnd,
+				LayoutEnd,
 
-                CHILD_Label,
-                LabelObject,
-                    LABEL_Justification, LABEL_LEFT,
-                    LABEL_Text, "Speed: ",
-                LabelEnd,
+				CHILD_Label,
+				LabelObject,
+					LABEL_Justification, LABEL_LEFT,
+					LABEL_Text, "Speed: ",
+				LabelEnd,
 
-                LAYOUT_AddChild, SpaceObject, SpaceEnd,
+				LAYOUT_AddChild, SpaceObject, SpaceEnd,
 
-                /* Encodings Chooser */
-                LAYOUT_AddChild, encoding_chooser =
-                ChooserObject,
-                    GA_RelVerify, TRUE,
-                    GA_ID, GA_Encoding,
-                    CHOOSER_PopUp, TRUE,
-                    CHOOSER_Labels, encodings_list,
-                ChooserEnd,
+				/* Encodings Chooser */
+				LAYOUT_AddChild, encoding_chooser =
+				(struct Gadget*)ChooserObject,
+					GA_RelVerify, TRUE,
+					GA_ID, GA_Encoding,
+					CHOOSER_PopUp, TRUE,
+					CHOOSER_Labels, encodings_list,
+				ChooserEnd,
 
-                CHILD_Label,
-                LabelObject,
-                    LABEL_Justification, LABEL_LEFT,
-                    LABEL_Text, "Encoding: ",
-                LabelEnd,
+				CHILD_Label,
+				LabelObject,
+					LABEL_Justification, LABEL_LEFT,
+					LABEL_Text, "Encoding: ",
+				LabelEnd,
 
-                LAYOUT_AddChild, SpaceObject, SpaceEnd,
+				LAYOUT_AddChild, SpaceObject, SpaceEnd,
 
-                /* Screen mode requester */
-                LAYOUT_AddChild, screenmode_requester =
-                GetScreenModeObject,
-                    GA_RelVerify, TRUE,
-                    GA_ID, GA_ScreenMode,
-                    GETSCREENMODE_FilterFunc, ScreenmodeHook,
-                GetScreenModeEnd,
+				/* Screen mode requester */
+				LAYOUT_AddChild, screenmode_requester =
+				(struct Gadget*)GetScreenModeObject,
+					GA_RelVerify, TRUE,
+					GA_ID, GA_ScreenMode,
+					GETSCREENMODE_FilterFunc, ScreenmodeHook,
+				GetScreenModeEnd,
 
-                CHILD_Label,
-                LabelObject,
-                    LABEL_Justification, LABEL_LEFT,
-                    LABEL_Text, "Screen Mode: ",
-                LabelEnd,
+				CHILD_Label,
+				LabelObject,
+					LABEL_Justification, LABEL_LEFT,
+					LABEL_Text, "Screen Mode: ",
+				LabelEnd,
 
-                LAYOUT_AddChild, SpaceObject, SpaceEnd,
+				LAYOUT_AddChild, SpaceObject, SpaceEnd,
 
-                /* Check boxes */
-                LAYOUT_AddChild,
-                LayoutObject,
-                    LAYOUT_Orientation, LAYOUT_HORIZONTAL,
-                    LAYOUT_HorizAlignment, LALIGN_CENTER,
-                    LAYOUT_EvenSize, TRUE,
+				/* Check boxes */
+				LAYOUT_AddChild,
+				LayoutObject,
+					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
+					LAYOUT_HorizAlignment, LALIGN_CENTER,
+					LAYOUT_EvenSize, TRUE,
 
-                    /* Fog */
-                    LAYOUT_AddChild, fog_checkbox =
-                    CheckBoxObject,
-                        GA_ID, GA_Fog,
-                        GA_Text, "_Fog",
-                        GA_Selected, TRUE,
-                        GA_RelVerify, TRUE,
-                    CheckBoxEnd,
+					/* Fog */
+					LAYOUT_AddChild, fog_checkbox =
+					(struct Gadget*)CheckBoxObject,
+						GA_ID, GA_Fog,
+						GA_Text, "_Fog",
+						GA_Selected, TRUE,
+						GA_RelVerify, TRUE,
+					CheckBoxEnd,
 
-                    /* Wave */
-                    LAYOUT_AddChild, wave_checkbox =
-                    CheckBoxObject,
-                        GA_ID, GA_Wave,
-                        GA_Text, "_Wave",
-                        GA_Selected, TRUE,
-                        GA_RelVerify, TRUE,
-                    CheckBoxEnd,
+					/* Wave */
+					LAYOUT_AddChild, wave_checkbox =
+					(struct Gadget*)CheckBoxObject,
+						GA_ID, GA_Wave,
+						GA_Text, "_Wave",
+						GA_Selected, TRUE,
+						GA_RelVerify, TRUE,
+					CheckBoxEnd,
 
-                    /* Rotate */
-                    LAYOUT_AddChild, rotate_checkbox =
-                    CheckBoxObject,
-                        GA_ID, GA_Rotate,
-                        GA_Text, "_Rotate",
-                        GA_Selected, TRUE,
-                        GA_RelVerify, TRUE,
-                    CheckBoxEnd,
+					/* Rotate */
+					LAYOUT_AddChild, rotate_checkbox =
+					(struct Gadget*)CheckBoxObject,
+						GA_ID, GA_Rotate,
+						GA_Text, "_Rotate",
+						GA_Selected, TRUE,
+						GA_RelVerify, TRUE,
+					CheckBoxEnd,
 
-                    /* Invert alpha */
-                    LAYOUT_AddChild, invert_checkbox =
-                    CheckBoxObject,
-                        GA_ID, GA_Invert,
-                        GA_Text, "_Invert alpha",
-                        GA_Selected, FALSE,
-                        GA_RelVerify, TRUE,
-                    CheckBoxEnd,
+					/* Invert alpha */
+					LAYOUT_AddChild, invert_checkbox =
+					(struct Gadget*)CheckBoxObject,
+						GA_ID, GA_Invert,
+						GA_Text, "_Invert alpha",
+						GA_Selected, FALSE,
+						GA_RelVerify, TRUE,
+					CheckBoxEnd,
 
-                LayoutEnd, /* End Check Boxes */
-             LayoutEnd; /* End Main Layout */
+				LayoutEnd, /* End Check Boxes */
+			LayoutEnd; /* End Main Layout */
 
 		if (bpws->rootLayout != NULL)
 		{
 			ica_targets[0].ti_Data = (ULONG)density_integer;
-			IIntuition->SetAttrsA(density_slider, ica_targets);
+			IIntuition->SetAttrsA((Object*)density_slider, ica_targets);
 			ica_targets[0].ti_Data = (ULONG)density_slider;
-			IIntuition->SetAttrsA(density_integer, ica_targets);
+			IIntuition->SetAttrsA((Object*)density_integer, ica_targets);
 
 			ica_targets[0].ti_Data = (ULONG)speed_integer;
-			IIntuition->SetAttrsA(speed_slider, ica_targets);
+			IIntuition->SetAttrsA((Object*)speed_slider, ica_targets);
 			ica_targets[0].ti_Data = (ULONG)speed_slider;
-			IIntuition->SetAttrsA(speed_integer, ica_targets);
+			IIntuition->SetAttrsA((Object*)speed_integer, ica_targets);
 		}
 
 		result = TRUE;
@@ -474,54 +474,54 @@ void GUIEventFunc( struct Hook *hook, struct BlankerModuleIFace *Self, struct Bl
 	uint32 refetch;
 	uint32 attr = 0;
 
-    if (( Self != NULL ) && ( event != NULL ))
-    {
-	    bd = (struct BlankerData *)((uint32)Self - Self->Data.NegativeSize);
-	    gadgetID = event->result & WMHI_GADGETMASK;
+	if (( Self != NULL ) && ( event != NULL ))
+	{
+		bd = (struct BlankerData *)((uint32)Self - Self->Data.NegativeSize);
+		gadgetID = event->result & WMHI_GADGETMASK;
 
 		refetch = bd->refetchSettings;
 
-	    switch( gadgetID )
-	    {
+		switch( gadgetID )
+		{
 			case GA_Density:
 			case GA_Density_Integer:
-				IIntuition->GetAttr(INTEGER_Number, density_integer, &attr);
+				IIntuition->GetAttr(INTEGER_Number, (Object*)density_integer, &attr);
 				bd->density = attr;
 				refetch |= TRUE;
 				break;
 			case GA_Speed:
 			case GA_Speed_Integer:
-				IIntuition->GetAttr(INTEGER_Number, speed_integer, &attr);
+				IIntuition->GetAttr(INTEGER_Number, (Object*)speed_integer, &attr);
 				bd->speed = attr;
 				refetch |= TRUE;
 				break;
 			case GA_Encoding:
-				IIntuition->GetAttr(CHOOSER_Selected, encoding_chooser, &attr);
+				IIntuition->GetAttr(CHOOSER_Selected, (Object*)encoding_chooser, &attr);
 				bd->encoding = attr;
 				refetch |= TRUE;
 				break;
 			case GA_ScreenMode:
 				RequestScreenMode((Object*)screenmode_requester, bd->WinInfo.window);
-				IIntuition->GetAttr(GETSCREENMODE_DisplayID, screenmode_requester, &attr);
+				IIntuition->GetAttr(GETSCREENMODE_DisplayID, (Object*)screenmode_requester, &attr);
 				bd->screenmodeID = attr;
 				break;
 			case GA_Fog:
-				IIntuition->GetAttr(GA_Selected, fog_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)fog_checkbox, &attr);
 				bd->fog = (BOOL)attr;
 				refetch |= TRUE;
 				break;
 			case GA_Wave:
-				IIntuition->GetAttr(GA_Selected, wave_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)wave_checkbox, &attr);
 				bd->wave = (BOOL)attr;
 				refetch |= TRUE;
 				break;
 			case GA_Rotate:
-				IIntuition->GetAttr(GA_Selected, rotate_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)rotate_checkbox, &attr);
 				bd->rotate = (BOOL)attr;
 				refetch |= TRUE;
 				break;
 			case GA_Invert:
-				IIntuition->GetAttr(GA_Selected, invert_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)invert_checkbox, &attr);
 				bd->invertAlpha = (BOOL)attr;
 				refetch |= TRUE;
 				break;
@@ -529,8 +529,8 @@ void GUIEventFunc( struct Hook *hook, struct BlankerModuleIFace *Self, struct Bl
 				break;
 		} /* switch gadget */
 
-	    bd->refetchSettings = refetch;
-    }
+		bd->refetchSettings = refetch;
+	}
 }
 
 /// GUI Idcmp Func
@@ -625,29 +625,29 @@ void UpdateWindowSettings( struct BlankerData *bd )
 
 	struct Window* gui_window = bd->WinInfo.window;
 
-    tags[0].ti_Tag  = INTEGER_Number;
+	tags[0].ti_Tag  = INTEGER_Number;
 	tags[0].ti_Data = bd->density;
-    IIntuition->SetGadgetAttrsA(density_integer, gui_window, NULL, tags);
+	IIntuition->SetGadgetAttrsA(density_integer, gui_window, NULL, tags);
 
 	tags[0].ti_Data = bd->speed;
-    IIntuition->SetGadgetAttrsA(speed_integer, gui_window, NULL, tags);
+	IIntuition->SetGadgetAttrsA(speed_integer, gui_window, NULL, tags);
 
-    tags[0].ti_Tag  = SLIDER_Level;
+	tags[0].ti_Tag  = SLIDER_Level;
 	tags[0].ti_Data = bd->density;
-    IIntuition->SetGadgetAttrsA(density_slider, gui_window, NULL, tags);
+	IIntuition->SetGadgetAttrsA(density_slider, gui_window, NULL, tags);
 
 	tags[0].ti_Data = bd->speed;
-    IIntuition->SetGadgetAttrsA(speed_slider, gui_window, NULL, tags);
+	IIntuition->SetGadgetAttrsA(speed_slider, gui_window, NULL, tags);
 
-    tags[0].ti_Tag  = CHOOSER_Selected;
+	tags[0].ti_Tag  = CHOOSER_Selected;
 	tags[0].ti_Data = bd->encoding;
-    IIntuition->SetGadgetAttrsA(encoding_chooser, gui_window, NULL, tags);
+	IIntuition->SetGadgetAttrsA(encoding_chooser, gui_window, NULL, tags);
 
-    tags[0].ti_Tag = GETSCREENMODE_DisplayID;
+	tags[0].ti_Tag = GETSCREENMODE_DisplayID;
 	tags[0].ti_Data = bd->screenmodeID;
 	IIntuition->RefreshSetGadgetAttrsA(screenmode_requester, gui_window, NULL, tags);
 
-    tags[0].ti_Tag  = GA_Selected;
+	tags[0].ti_Tag  = GA_Selected;
 	tags[0].ti_Data = (ULONG)bd->fog;
 	IIntuition->RefreshSetGadgetAttrsA(fog_checkbox, gui_window, NULL, tags);
 

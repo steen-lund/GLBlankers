@@ -287,17 +287,17 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 		bpws->eventHook     = (APTR)&GUIEventHook;
 
 		bpws->rootLayout = LayoutObject,
-                LAYOUT_Orientation, LAYOUT_VERTICAL,
-                LAYOUT_SpaceInner, TRUE,
-                LAYOUT_SpaceOuter, TRUE,
-                LAYOUT_DeferLayout, TRUE,
+				LAYOUT_Orientation, LAYOUT_VERTICAL,
+				LAYOUT_SpaceInner, TRUE,
+				LAYOUT_SpaceOuter, TRUE,
+				LAYOUT_DeferLayout, TRUE,
 
 #define SLIDERINTEGER(GAD, GADID, LEVEL, MIN, MAX, LABEL) \
 				LAYOUT_AddChild,                              \
 				LayoutObject,                                 \
 					LAYOUT_Orientation, LAYOUT_HORIZONTAL,    \
 					LAYOUT_AddChild, GAD##_slider =           \
-					SliderObject,                             \
+					(struct Gadget*)SliderObject,             \
 						GA_RelVerify, TRUE,                   \
 						GA_ID, GADID,                         \
 						SLIDER_Level, LEVEL,                  \
@@ -307,7 +307,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 						ICA_MAP, sl_2_int_map,                \
 					SliderEnd,                                \
 					LAYOUT_AddChild, GAD##_integer =          \
-					IntegerObject,                            \
+					(struct Gadget*)IntegerObject,            \
 						GA_RelVerify, TRUE,                   \
 						GA_ID, GADID##_Integer,               \
 						INTEGER_Number, LEVEL,                \
@@ -359,7 +359,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
                     /* Fog */
 					LAYOUT_AddChild, fog_checkbox =
-					CheckBoxObject,
+					(struct Gadget*)CheckBoxObject,
 						GA_ID, GA_Fog,
 						GA_Text, "_Fog",
 						GA_Selected, TRUE,
@@ -368,7 +368,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
                     /* Wave */
 					LAYOUT_AddChild, drawbbox_checkbox =
-					CheckBoxObject,
+					(struct Gadget*)CheckBoxObject,
 						GA_ID, GA_DrawBBox,
 						GA_Text, "_DrawBBox",
 						GA_Selected, TRUE,
@@ -377,7 +377,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
                     /* Rotate */
 					LAYOUT_AddChild, drawgoal_checkbox =
-					CheckBoxObject,
+					(struct Gadget*)CheckBoxObject,
 						GA_ID, GA_DrawGoal,
 						GA_Text, "Draw_Goal",
 						GA_Selected, FALSE,
@@ -389,7 +389,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
                 /* Screen mode requester */
 				LAYOUT_AddChild, screenmode_requester =
-                GetScreenModeObject,
+                (struct Gadget*)GetScreenModeObject,
                     GA_RelVerify, TRUE,
                     GA_ID, GA_ScreenMode,
                     GETSCREENMODE_FilterFunc, ScreenmodeHook,
@@ -406,9 +406,9 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 		{
 #define BIND(X) \
 			ica_targets[0].ti_Data = (ULONG)X##_integer; \
-			IIntuition->SetAttrsA(X##_slider, ica_targets); \
+			IIntuition->SetAttrsA((Object*)X##_slider, ica_targets); \
 			ica_targets[0].ti_Data = (ULONG)X##_slider; \
-			IIntuition->SetAttrsA(X##_integer, ica_targets);
+			IIntuition->SetAttrsA((Object*)X##_integer, ica_targets);
 
 			BIND(fish)
 			BIND(goalchg)
@@ -460,7 +460,7 @@ void GUIEventFunc(struct Hook* hook, struct BlankerModuleIFace* Self, struct Bla
 #define READ_UI(GADID, GAD, VAR)                                 \
 			case GADID:                                          \
 			case GADID##_Integer:                                \
-				IIntuition->GetAttr(INTEGER_Number, GAD##_integer, &attr); \
+				IIntuition->GetAttr(INTEGER_Number, (Object*)GAD##_integer, &attr); \
 				VAR	= attr;                                      \
 				refetch |= TRUE;                                 \
 				break;
@@ -468,7 +468,7 @@ void GUIEventFunc(struct Hook* hook, struct BlankerModuleIFace* Self, struct Bla
 #define READ_UI_FLOAT(GADID, GAD, VAR, FACTOR)                   \
 			case GADID:                                          \
 			case GADID##_Integer:                                \
-				IIntuition->GetAttr(INTEGER_Number, GAD##_integer, &attr); \
+				IIntuition->GetAttr(INTEGER_Number, (Object*)GAD##_integer, &attr); \
 				VAR	= (float)attr / FACTOR;                      \
 				refetch |= TRUE;                                 \
 				break;
@@ -494,21 +494,21 @@ void GUIEventFunc(struct Hook* hook, struct BlankerModuleIFace* Self, struct Bla
 
 			case GA_ScreenMode:
 				RequestScreenMode((Object*)screenmode_requester, bd->WinInfo.window);
-				IIntuition->GetAttr(GETSCREENMODE_DisplayID, screenmode_requester, &attr);
+				IIntuition->GetAttr(GETSCREENMODE_DisplayID, (Object*)screenmode_requester, &attr);
 				bd->screenmodeID = attr;
 				break;
 			case GA_Fog:
-				IIntuition->GetAttr(GA_Selected, fog_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)fog_checkbox, &attr);
 				bd->fog = (BOOL)attr;
 				refetch |= TRUE;
 				break;
 			case GA_DrawBBox:
-				IIntuition->GetAttr(GA_Selected, drawbbox_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)drawbbox_checkbox, &attr);
 				bd->drawbbox = (BOOL)attr;
 				refetch |= TRUE;
 				break;
 			case GA_DrawGoal:
-				IIntuition->GetAttr(GA_Selected, drawgoal_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)drawgoal_checkbox, &attr);
 				bd->drawgoal = (BOOL)attr;
 				refetch |= TRUE;
 				break;

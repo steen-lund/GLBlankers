@@ -313,7 +313,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
 					/* Waves Slider */
 					LAYOUT_AddChild, waves_slider =
-					SliderObject,
+					(struct Gadget*)SliderObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Waves,
 						SLIDER_Level, 2,
@@ -325,7 +325,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
                     /* Density Integer */
 					LAYOUT_AddChild, waves_integer =
-					IntegerObject,
+					(struct Gadget*)IntegerObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Waves_Integer,
 						INTEGER_Number, 2,
@@ -350,7 +350,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
 					/* Radius Slider */
 					LAYOUT_AddChild, radius_slider =
-					SliderObject,
+					(struct Gadget*)SliderObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Radius,
 						SLIDER_Level, 50,
@@ -362,7 +362,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 					/* Radius Integer */
 					LAYOUT_AddChild, radius_integer =
-					IntegerObject,
+					(struct Gadget*)(IntegerObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Radius_Integer,
 						INTEGER_Number, 50,
@@ -370,7 +370,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 						INTEGER_Maximum, 128,
 						INTEGER_Arrows, FALSE,
 						ICA_MAP, int_2_sl_map,
-					IntegerEnd,
+					IntegerEnd),
 				LayoutEnd,
 
 				CHILD_Label,
@@ -387,7 +387,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
                     /* Speed Slider */
 					LAYOUT_AddChild, speed_slider =
-					SliderObject,
+					(struct Gadget*)SliderObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Speed,
 						SLIDER_Level, 80,
@@ -399,7 +399,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
                     /* Speed Integer */
 					LAYOUT_AddChild, speed_integer =
-					IntegerObject,
+					(struct Gadget*)IntegerObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Speed_Integer,
 						INTEGER_Number, 80,
@@ -420,7 +420,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 				/* Spin Chooser */
 				LAYOUT_AddChild, spin_chooser =
-				ChooserObject,
+				(struct Gadget*)ChooserObject,
 					GA_RelVerify, TRUE,
 					GA_ID, GA_Spin,
 					CHOOSER_PopUp, TRUE,
@@ -443,7 +443,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 					/* Wander */
 					LAYOUT_AddChild, wander_checkbox =
-					CheckBoxObject,
+					(struct Gadget*)CheckBoxObject,
 						GA_ID, GA_Wander,
 						CHECKBOX_TextPlace, PLACETEXT_LEFT,
 						GA_Text, "_Wander: ",
@@ -453,7 +453,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 					/* Texture */
 					LAYOUT_AddChild, texture_checkbox =
-					CheckBoxObject,
+					(struct Gadget*)CheckBoxObject,
 						GA_ID, GA_Texture,
 						CHECKBOX_TextPlace, PLACETEXT_LEFT,
 						GA_Text, "_Texture: ",
@@ -463,7 +463,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 					/* Texture size Chooser */
 					LAYOUT_AddChild, texture_size_chooser =
-					ChooserObject,
+					(struct Gadget*)ChooserObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_TextureSize,
 						CHOOSER_PopUp, TRUE,
@@ -479,40 +479,40 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 				LAYOUT_AddChild, SpaceObject, SpaceEnd,
 
-                /* Screen mode requester */
+				/* Screen mode requester */
 				LAYOUT_AddChild, screenmode_requester =
-                GetScreenModeObject,
-                    GA_RelVerify, TRUE,
-                    GA_ID, GA_ScreenMode,
-                    GETSCREENMODE_FilterFunc, ScreenmodeHook,
-                GetScreenModeEnd,
+				(struct Gadget*)GetScreenModeObject,
+					GA_RelVerify, TRUE,
+					GA_ID, GA_ScreenMode,
+					GETSCREENMODE_FilterFunc, ScreenmodeHook,
+				GetScreenModeEnd,
 
-                CHILD_Label,
-                LabelObject,
-                    LABEL_Justification, LABEL_LEFT,
-                    LABEL_Text, "Screen Mode: ",
-                LabelEnd,
+				CHILD_Label,
+				LabelObject,
+					LABEL_Justification, LABEL_LEFT,
+					LABEL_Text, "Screen Mode: ",
+				LabelEnd,
 
 				LAYOUT_AddChild, SpaceObject, SpaceEnd,
 
-             LayoutEnd; /* End Main Layout */
+				LayoutEnd; /* End Main Layout */
 
 		if (bpws->rootLayout != NULL)
 		{
 			ica_targets[0].ti_Data = (ULONG)waves_integer;
-			IIntuition->SetAttrsA(waves_slider, ica_targets);
+			IIntuition->SetAttrsA((Object*)waves_slider, ica_targets);
 			ica_targets[0].ti_Data = (ULONG)waves_slider;
-			IIntuition->SetAttrsA(waves_integer, ica_targets);
+			IIntuition->SetAttrsA((Object*)waves_integer, ica_targets);
 
 			ica_targets[0].ti_Data = (ULONG)radius_integer;
-			IIntuition->SetAttrsA(radius_slider, ica_targets);
+			IIntuition->SetAttrsA((Object*)radius_slider, ica_targets);
 			ica_targets[0].ti_Data = (ULONG)radius_slider;
-			IIntuition->SetAttrsA(radius_integer, ica_targets);
+			IIntuition->SetAttrsA((Object*)radius_integer, ica_targets);
 
 			ica_targets[0].ti_Data = (ULONG)speed_integer;
-			IIntuition->SetAttrsA(speed_slider, ica_targets);
+			IIntuition->SetAttrsA((Object*)speed_slider, ica_targets);
 			ica_targets[0].ti_Data = (ULONG)speed_slider;
-			IIntuition->SetAttrsA(speed_integer, ica_targets);
+			IIntuition->SetAttrsA((Object*)speed_integer, ica_targets);
 		}
 
 		result = TRUE;
@@ -560,45 +560,44 @@ void GUIEventFunc(struct Hook* hook, struct BlankerModuleIFace* Self, struct Bla
 	    {
 			case GA_Waves:
 			case GA_Waves_Integer:
-				IIntuition->GetAttr(INTEGER_Number, waves_integer, &attr);
+				IIntuition->GetAttr(INTEGER_Number, (Object*)waves_integer, &attr);
 				bd->waves = attr;
 				refetch |= TRUE;
 				break;
 			case GA_Radius:
 			case GA_Radius_Integer:
-				IIntuition->GetAttr(INTEGER_Number, radius_integer, &attr);
+				IIntuition->GetAttr(INTEGER_Number, (Object*)radius_integer, &attr);
 				bd->radius = attr;
 				refetch |= TRUE;
 				break;
 			case GA_Speed:
 			case GA_Speed_Integer:
-				IIntuition->GetAttr(INTEGER_Number, speed_integer, &attr);
+				IIntuition->GetAttr(INTEGER_Number, (Object*)speed_integer, &attr);
 				bd->speed = attr;
-				refetch |= TRUE;
 				break;
 			case GA_Spin:
-				IIntuition->GetAttr(CHOOSER_Selected, spin_chooser, &attr);
+				IIntuition->GetAttr(CHOOSER_Selected, (Object*)spin_chooser, &attr);
 				bd->spin = attr;
 				refetch |= TRUE;
 				break;
 			case GA_Wander:
-				IIntuition->GetAttr(GA_Selected, wander_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)wander_checkbox, &attr);
 				bd->wander = (BOOL)attr;
 				refetch |= TRUE;
 				break;
 			case GA_Texture:
-				IIntuition->GetAttr(GA_Selected, texture_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)texture_checkbox, &attr);
 				bd->texture = (BOOL)attr;
 				refetch |= TRUE;
 				break;
 			case GA_TextureSize:
-				IIntuition->GetAttr(CHOOSER_Selected, texture_size_chooser, &attr);
+				IIntuition->GetAttr(CHOOSER_Selected, (Object*)texture_size_chooser, &attr);
 				bd->texture_size = attr;
 				refetch |= TRUE;
 				break;
 		  case GA_ScreenMode:
 				RequestScreenMode((Object*)screenmode_requester, bd->WinInfo.window);
-				IIntuition->GetAttr(GETSCREENMODE_DisplayID, screenmode_requester, &attr);
+				IIntuition->GetAttr(GETSCREENMODE_DisplayID, (Object*)screenmode_requester, &attr);
 				bd->screenmodeID = attr;
 				break;
 		    default:

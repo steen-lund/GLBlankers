@@ -134,7 +134,7 @@ make_rotator (double spin_x_speed,
               double wander_speed,
               int randomize_initial_state_p)
 {
-  rotator *r = (rotator *) IExec->AllocVec(sizeof(*r), MEMF_CLEAR);
+  rotator *r = (rotator *) IExec->AllocVecTags(sizeof(*r), AVT_ClearWithValue, 0, TAG_DONE);
   double d, dd;
 
   if (!r) return 0;
