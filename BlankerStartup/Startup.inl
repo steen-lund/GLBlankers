@@ -749,14 +749,14 @@ uint32 OpenLibraries( void )
 		return FALSE;
 	}
 
-	ApplicationBase = IExec->OpenLibrary( "application.library", 51 );
-	IApplication = (struct ApplicationIFace *)IExec->GetInterface(ApplicationBase, "application", 1, NULL);
+	ApplicationBase = IExec->OpenLibrary( "application.library", 53 );
+	IApplication = (struct ApplicationIFace *)IExec->GetInterface(ApplicationBase, "application", 2, NULL);
 	if (IApplication == NULL)
 	{
 		return FALSE;
 	}
 
-	IPrefsObjects = (struct PrefsObjectsIFace *)IExec->GetInterface(ApplicationBase, "prefsobjects", 1, NULL);
+	IPrefsObjects = (struct PrefsObjectsIFace *)IExec->GetInterface(ApplicationBase, "prefsobjects", 2, NULL);
 	if (IPrefsObjects == NULL)
 	{
 		return FALSE;
