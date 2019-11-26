@@ -31,7 +31,7 @@ struct trackball_state {
 trackball_state *
 gltrackball_init (void)
 {
-  trackball_state *ts = (trackball_state *) IExec->AllocVec (sizeof (*ts), MEMF_CLEAR);
+  trackball_state *ts = (trackball_state *) IExec->AllocVecTags (sizeof (*ts), AVT_ClearWithValue, 0, TAG_DONE);
   if (!ts) return 0;
   trackball (ts->q, 0, 0, 0, 0);
   return ts;

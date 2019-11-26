@@ -246,18 +246,18 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 		bpws->eventHook     = (APTR)&GUIEventHook;
 
 		bpws->rootLayout = LayoutObject,
-                LAYOUT_Orientation, LAYOUT_VERTICAL,
-                LAYOUT_SpaceInner, TRUE,
-                LAYOUT_SpaceOuter, TRUE,
-                LAYOUT_DeferLayout, TRUE,
+				LAYOUT_Orientation, LAYOUT_VERTICAL,
+				LAYOUT_SpaceInner, TRUE,
+				LAYOUT_SpaceOuter, TRUE,
+				LAYOUT_DeferLayout, TRUE,
 
 				/* Speed Slider and Integer */
 				LAYOUT_AddChild,
 				LayoutObject,
 					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
-                    /* Speed Slider */
+					/* Speed Slider */
 					LAYOUT_AddChild, speed_slider =
-					SliderObject,
+					(struct Gadget*)SliderObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Speed,
 						SLIDER_Level, 100,
@@ -267,9 +267,9 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 						ICA_MAP, sl_2_int_map,
 					SliderEnd,
 
-                    /* Speed Integer */
+					/* Speed Integer */
 					LAYOUT_AddChild, speed_integer =
-					IntegerObject,
+					(struct Gadget*)IntegerObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Speed_Integer,
 						INTEGER_Number, 100,
@@ -288,7 +288,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 				LAYOUT_AddChild, SpaceObject, SpaceEnd,
 
-                /* Check boxes */
+				/* Check boxes */
 				LAYOUT_AddChild,
 				LayoutObject,
 					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
@@ -297,7 +297,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 					/* Random */
 					LAYOUT_AddChild, random_checkbox =
-					CheckBoxObject,
+					(struct Gadget*)CheckBoxObject,
 						GA_ID, GA_Random,
 						GA_Text, "_Random",
 						GA_Selected, TRUE,
@@ -306,7 +306,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 					/* Wander */
 					LAYOUT_AddChild, wander_checkbox =
-					CheckBoxObject,
+					(struct Gadget*)CheckBoxObject,
 						GA_ID, GA_Wander,
 						GA_Text, "_Wander",
 						GA_Selected, TRUE,
@@ -315,7 +315,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 					/* Spin */
 					LAYOUT_AddChild, spin_checkbox =
-					CheckBoxObject,
+					(struct Gadget*)CheckBoxObject,
 						GA_ID, GA_Spin,
 						GA_Text, "_Spin",
 						GA_Selected, TRUE,
@@ -326,27 +326,27 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 				LAYOUT_AddChild, SpaceObject, SpaceEnd,
 
-                /* Screen mode requester */
+				/* Screen mode requester */
 				LAYOUT_AddChild, screenmode_requester =
-                GetScreenModeObject,
-                    GA_RelVerify, TRUE,
-                    GA_ID, GA_ScreenMode,
-                    GETSCREENMODE_FilterFunc, ScreenmodeHook,
-                GetScreenModeEnd,
+				(struct Gadget*)GetScreenModeObject,
+					GA_RelVerify, TRUE,
+					GA_ID, GA_ScreenMode,
+					GETSCREENMODE_FilterFunc, ScreenmodeHook,
+				GetScreenModeEnd,
 
-                CHILD_Label,
-                LabelObject,
-                    LABEL_Justification, LABEL_LEFT,
-                    LABEL_Text, "Screen Mode: ",
-                LabelEnd,
-             LayoutEnd; /* End Main Layout */
+				CHILD_Label,
+				LabelObject,
+					LABEL_Justification, LABEL_LEFT,
+					LABEL_Text, "Screen Mode: ",
+				LabelEnd,
+			LayoutEnd; /* End Main Layout */
 
 		if (bpws->rootLayout != NULL)
 		{
 			ica_targets[0].ti_Data = (ULONG)speed_integer;
-			IIntuition->SetAttrsA(speed_slider, ica_targets);
+			IIntuition->SetAttrsA((Object*)speed_slider, ica_targets);
 			ica_targets[0].ti_Data = (ULONG)speed_slider;
-			IIntuition->SetAttrsA(speed_integer, ica_targets);
+			IIntuition->SetAttrsA((Object*)speed_integer, ica_targets);
 		}
 
 		result = TRUE;
@@ -382,27 +382,27 @@ void GUIEventFunc(struct Hook* hook, struct BlankerModuleIFace* Self, struct Bla
 	    {
 			case GA_Speed:
 			case GA_Speed_Integer:
-				IIntuition->GetAttr(INTEGER_Number, speed_integer, &attr);
+				IIntuition->GetAttr(INTEGER_Number, (Object*)speed_integer, &attr);
 				bd->speed = attr;
 				refetch |= TRUE;
 				break;
 			case GA_ScreenMode:
 				RequestScreenMode((Object*)screenmode_requester, bd->WinInfo.window);
-				IIntuition->GetAttr(GETSCREENMODE_DisplayID, screenmode_requester, &attr);
+				IIntuition->GetAttr(GETSCREENMODE_DisplayID, (Object*)screenmode_requester, &attr);
 				bd->screenmodeID = attr;
 				break;
 			case GA_Random:
-				IIntuition->GetAttr(GA_Selected, random_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)random_checkbox, &attr);
 				bd->random = (BOOL)attr;
 				refetch |= TRUE;
 				break;
 			case GA_Wander:
-				IIntuition->GetAttr(GA_Selected, wander_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)wander_checkbox, &attr);
 				bd->do_wander = (BOOL)attr;
 				refetch |= TRUE;
 				break;
 			case GA_Spin:
-				IIntuition->GetAttr(GA_Selected, spin_checkbox, &attr);
+				IIntuition->GetAttr(GA_Selected, (Object*)spin_checkbox, &attr);
 				bd->do_spin = (BOOL)attr;
 				refetch |= TRUE;
 				break;

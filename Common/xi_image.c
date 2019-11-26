@@ -1,6 +1,6 @@
 #include "xi_image.h"
 #define PNG_USER_MEM_SUPPORTED
-#include <libpng12/png.h>
+#include <libpng16/png.h>
 #include <assert.h>
 #include <proto/exec.h>
 
@@ -22,7 +22,7 @@ void XDestroyImage(XImage *xi)
 
 png_voidp user_malloc(png_structp png_ptr, png_size_t size)
 {
-	return IExec->AllocVec(size, MEMF_CLEAR);
+	return IExec->AllocVecTags(size, AVT_ClearWithValue, 0, TAG_DONE);
 }
 
 void user_free(png_structp png_ptr, png_voidp ptr)
@@ -32,7 +32,7 @@ void user_free(png_structp png_ptr, png_voidp ptr)
 
 static void user_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
 {
-	MemoryStream* stream = (MemoryStream*)png_ptr->io_ptr;
+	MemoryStream* stream = (MemoryStream*)png_get_io_ptr(png_ptr);
 	IExec->CopyMem((APTR*)(stream->memory_location + stream->position), (APTR*)data, length);
 	stream->position += length;
 }
@@ -55,8 +55,8 @@ XImage* inmemory_png_to_ximage(unsigned char *png_mem)
 
 	if(png_sig_cmp((png_byte*)png_mem, 0, 8) == 0) //  if 0 then it is a png
 	{
-		xi = IExec->AllocVec(sizeof(XImage), MEMF_CLEAR);
-		MemoryStream* stream = IExec->AllocVec(sizeof(MemoryStream), MEMF_CLEAR);
+		xi = IExec->AllocVecTags(sizeof(XImage), AVT_ClearWithValue, 0, TAG_DONE);
+		MemoryStream* stream = IExec->AllocVecTags(sizeof(MemoryStream), AVT_ClearWithValue, 0, TAG_DONE);
 		stream->memory_location = png_mem;
 		stream->position = 0;
 		png = png_create_read_struct_2(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL, NULL, user_malloc, user_free);
@@ -76,7 +76,7 @@ XImage* inmemory_png_to_ximage(unsigned char *png_mem)
 
 		if (bit_depth < 8)
 		{
-			png_set_gray_1_2_4_to_8(png);
+			png_set_expand_gray_1_2_4_to_8(png);
 			bit_depth = 8;
 		}
 		else if (bit_depth > 8)
@@ -98,7 +98,7 @@ XImage* inmemory_png_to_ximage(unsigned char *png_mem)
 		png_read_update_info(png, startinfo);
 
 		xi->bytes_per_line = xi->width * 4;
-		xi->data = IExec->AllocVec(xi->bytes_per_line * xi->height, MEMF_CLEAR);
+		xi->data = IExec->AllocVecTags(xi->bytes_per_line * xi->height, AVT_ClearWithValue, 0, TAG_DONE);
 		row_pointer = (png_bytep)(xi->data + xi->width * (xi->height - 1));
 
 		for (y = 0; y < xi->height; y++)

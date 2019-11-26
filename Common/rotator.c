@@ -21,6 +21,10 @@
 #include "yarandom.h"
 #include <proto/exec.h>
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 struct rotator {
 
   double spin_x_speed, spin_y_speed, spin_z_speed;
@@ -134,7 +138,7 @@ make_rotator (double spin_x_speed,
               double wander_speed,
               int randomize_initial_state_p)
 {
-  rotator *r = (rotator *) IExec->AllocVec(sizeof(*r), MEMF_CLEAR);
+  rotator *r = (rotator *) IExec->AllocVecTags(sizeof(*r), AVT_ClearWithValue, 0, TAG_DONE);
   double d, dd;
 
   if (!r) return 0;

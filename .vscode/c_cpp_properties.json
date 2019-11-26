@@ -1,0 +1,14 @@
+{
+    "env": {
+        "myDefaultIncludePath": ["${workspaceFolder}", "${workspaceFolder}/include"],
+        "myCompilerPath": "/opt/local/adtools/bin/ppc-amigaos-gcc"
+    },
+    "configurations": [
+        {
+            "name": "Amiga",
+            "includePath": ["/opt/local/adtools/ppc-amigaos/SDK/include/include_h"],
+            "defines": ["__amigaos4__","__GNUC__=8","__PPC__", "USE_GL"]
+        }
+    ],
+    "version": 4
+}

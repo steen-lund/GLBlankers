@@ -24,6 +24,10 @@
 
 #ifdef USE_GL /* whole file */
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 #define DEF_SPIN        "XYZ"
 #define DEF_WANDER      "True"
 #define DEF_TEXTURE     "True"
@@ -177,13 +181,13 @@ init_wave ()
   cube_configuration *cc = &ccs;
   waves *ww;
   int i;
-  cc->waves = ww = (waves *) IExec->AllocVec(sizeof(*cc->waves), MEMF_CLEAR);
+  cc->waves = ww = (waves *) IExec->AllocVecTags(sizeof(*cc->waves), AVT_ClearWithValue, 0, TAG_DONE);
   ww->nwaves = wave_count;
   ww->radius = wave_radius;
   ww->sqr_radius = wave_radius * wave_radius;
   ww->speed  = wave_speed;
-  ww->heights = (int *) IExec->AllocVec (sizeof(*ww->heights) * ww->radius, MEMF_CLEAR);
-  ww->srcs = (wave_src *) IExec->AllocVec (sizeof(*ww->srcs) * ww->nwaves, MEMF_CLEAR);
+  ww->heights = (int *) IExec->AllocVecTags(sizeof(*ww->heights) * ww->radius, AVT_ClearWithValue, 0, TAG_DONE);
+  ww->srcs = (wave_src *) IExec->AllocVecTags(sizeof(*ww->srcs) * ww->nwaves, AVT_ClearWithValue, 0, TAG_DONE);
 
   for (i = 0; i < ww->radius; i++)
     {
@@ -388,8 +392,8 @@ init_cube (struct BlankerData* bd)
   }
 
   cc->ncolors = 256;
-  cc->texture_colors = (XColor *) IExec->AllocVec(cc->ncolors * sizeof(XColor), MEMF_CLEAR);
-  cc->cube_colors    = (XColor *) IExec->AllocVec(cc->ncolors * sizeof(XColor), MEMF_CLEAR);
+  cc->texture_colors = (XColor *) IExec->AllocVecTags(cc->ncolors * sizeof(XColor), AVT_ClearWithValue, 0, TAG_DONE);
+  cc->cube_colors    = (XColor *) IExec->AllocVecTags(cc->ncolors * sizeof(XColor), AVT_ClearWithValue, 0, TAG_DONE);
 
   {
     double H[3], S[3], V[3];
@@ -412,7 +416,7 @@ init_cube (struct BlankerData* bd)
   }
 
   cc->ncubes = 1; /*MI_COUNT (mi);*/
-  cc->cubes = (cube *) IExec->AllocVec (sizeof(cube) * cc->ncubes, MEMF_CLEAR);
+  cc->cubes = (cube *) IExec->AllocVecTags(sizeof(cube) * cc->ncubes, AVT_ClearWithValue, 0, TAG_DONE);
   for (i = 0; i < cc->ncubes; i++)
     {
       cube *cube = &cc->cubes[i];

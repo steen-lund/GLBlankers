@@ -552,7 +552,7 @@ static void load_textures(BOOL flip_p, BOOL invertAlpha)
 			uint32 oldsize = xi->height * xi->bytes_per_line;
 			xi->height = (xi->height < 256 ? 256 : 512);
 			uint32 newsize = xi->height * xi->bytes_per_line;
-			APTR* temp = IExec->AllocVec(xi->height * xi->bytes_per_line, MEMF_CLEAR);
+			APTR* temp = IExec->AllocVecTags(xi->height * xi->bytes_per_line, AVT_ClearWithValue, 0, TAG_DONE);
 
 			if (oldsize<=newsize)
 				IExec->CopyMem(xi->data, temp, oldsize);
@@ -609,14 +609,16 @@ static void load_textures(BOOL flip_p, BOOL invertAlpha)
 				that be the case?
 			*/
 
-		if (bigendian())
-		{
-			rpos = 24, gpos = 16, bpos =  8, apos =  0;
-		}
-		else
+			if (bigendian())
+			{
+				rpos = 24, gpos = 16, bpos =  8, apos =  0;
+			}
+			else
 #endif
-			rpos =  0, gpos =  8, bpos = 16, apos = 24;
-
+			{
+				rpos =  0, gpos =  8, bpos = 16, apos = 24;
+			}
+			
 			for (y = 0; y < xi->height; y++)
 			{
 				for (x = 0; x < xi->width; x++)
@@ -768,7 +770,7 @@ void init_matrix(struct BlankerData* bd)
 	if	(mp->nstrips < 1) mp->nstrips = 1;
 	else if	(mp->nstrips > 2000) mp->nstrips = 2000;
 
-	mp->strips = IExec->AllocVec(mp->nstrips * sizeof(strip), MEMF_CLEAR);
+	mp->strips = IExec->AllocVecTags(mp->nstrips * sizeof(strip), AVT_ClearWithValue, 0, TAG_DONE);
 	for (i = 0; i < mp->nstrips; i++)
 	{
 		strip *s = &mp->strips[i];
@@ -884,7 +886,7 @@ void draw_matrix()
 		the alpha transparency work out right.)
 	*/
 	{
-		strip **sorted = IExec->AllocVec(mp->nstrips * sizeof(*sorted), MEMF_CLEAR);
+		strip **sorted = IExec->AllocVecTags(mp->nstrips * sizeof(*sorted), AVT_ClearWithValue, 0, TAG_DONE);
 		for (i = 0; i < mp->nstrips; i++)
 		{
 			sorted[i] = &mp->strips[i];

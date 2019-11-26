@@ -38,6 +38,10 @@
 
 #ifdef USE_GL
 
+#ifndef M_PI
+#define M_PI 3.1415627165242f
+#endif
+
 # define DEF_SPEED      "0.5"
 # define DEF_BALLS	"25"
 # define DEF_BALLSIZE   "2.0"
@@ -440,9 +444,9 @@ static void createtrisfromball(triman* tman, vectorf *spherev, GLint *spherei, i
    
    /* reserveer geheugen voor de poly's in een bal */
    
-   tman->tris = (tri *)IExec->AllocVec(tman->num_tri * sizeof(tri), MEMF_CLEAR);
-   tman->vertices = (vectorf *)IExec->AllocVec(ind_num * sizeof(vectorf), MEMF_CLEAR);
-   tman->normals = (vectorf *)IExec->AllocVec(ind_num/3 * sizeof(vectorf), MEMF_CLEAR);
+   tman->tris = (tri *)IExec->AllocVecTags(tman->num_tri * sizeof(tri), AVT_ClearWithValue, 0, TAG_DONE);
+   tman->vertices = (vectorf *)IExec->AllocVecTags(ind_num * sizeof(vectorf), AVT_ClearWithValue, 0, TAG_DONE);
+   tman->normals = (vectorf *)IExec->AllocVecTags(ind_num/3 * sizeof(vectorf), AVT_ClearWithValue, 0, TAG_DONE);
    
    for (i=0; i<(tman->num_tri); i++) {
       tman->tris[i].far = FALSE;
@@ -1044,12 +1048,12 @@ static void pinit()
    
    bman = &gp->bman;
    
-   bman->balls = (ball *)IExec->AllocVec(gp->config.numballs * sizeof(ball), MEMF_CLEAR);
+   bman->balls = (ball *)IExec->AllocVecTags(gp->config.numballs * sizeof(ball), AVT_ClearWithValue, 0, TAG_DONE);
    bman->num_balls = gp->config.numballs;
    bman->ballsize = gp->config.ballsize;
    bman->explosion = gp->config.explosion;
    
-   gp->tman = (triman *)IExec->AllocVec(bman->num_balls * sizeof(triman), MEMF_CLEAR);
+   gp->tman = (triman *)IExec->AllocVecTags(bman->num_balls * sizeof(triman), AVT_ClearWithValue, 0, TAG_DONE);
    // No need to clear, cleared by AllocVec
    //memset(gp->tman,0,bman->num_balls * sizeof(triman));
    
@@ -1081,7 +1085,7 @@ static void pinit()
    gp->tic = gp->camtic = rnd() * 100.0f;
    
    /* define tex1 (bottom plate) */
-   gp->tex1 = (char *)IExec->AllocVec(3*width*height*sizeof(GLuint), MEMF_CLEAR);
+   gp->tex1 = (char *)IExec->AllocVecTags(3*width*height*sizeof(GLuint), AVT_ClearWithValue, 0, TAG_DONE);
    texpixels = 256*256; /*width*height;*/
    texpixeldata = header_data;
    texpixeltarget = gp->tex1;

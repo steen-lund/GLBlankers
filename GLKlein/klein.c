@@ -12,6 +12,10 @@
 
 #ifdef USE_GL
 
+#ifndef M_PI
+#define M_PI 3.1415627165242f
+#endif
+
 #define DEF_SPIN			        "True"
 #define DEF_WANDER			        "False"
 #define DEF_RANDOM			        "True"

@@ -265,7 +265,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
                     /* Speed Slider */
 					LAYOUT_AddChild, speed_slider =
-					SliderObject,
+					(struct Gadget*)SliderObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Speed,
 						SLIDER_Level, 40,
@@ -277,7 +277,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
                     /* Speed Integer */
 					LAYOUT_AddChild, speed_integer =
-					IntegerObject,
+					(struct Gadget*)IntegerObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Speed_Integer,
 						INTEGER_Number, 40,
@@ -302,7 +302,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
 					/* Balls Slider */
 					LAYOUT_AddChild, balls_slider =
-					SliderObject,
+					(struct Gadget*)SliderObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Balls,
 						SLIDER_Level, 25,
@@ -314,7 +314,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 					/* Balls Integer */
 					LAYOUT_AddChild, balls_integer =
-					IntegerObject,
+					(struct Gadget*)IntegerObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Balls_Integer,
 						INTEGER_Number, 25,
@@ -339,7 +339,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
 					/* Balls Slider */
 					LAYOUT_AddChild, ballsize_slider =
-					SliderObject,
+					(struct Gadget*)SliderObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_BallSize,
 						SLIDER_Level, 20,
@@ -351,7 +351,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 					/* BallSize Integer */
 					LAYOUT_AddChild, ballsize_integer =
-					IntegerObject,
+					(struct Gadget*)IntegerObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_BallSize_Integer,
 						INTEGER_Number, 20,
@@ -376,7 +376,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
 					/* Explosion Slider */
 					LAYOUT_AddChild, explosion_slider =
-					SliderObject,
+					(struct Gadget*)SliderObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Explosion,
 						SLIDER_Level, 15,
@@ -388,7 +388,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 					/* Balls Integer */
 					LAYOUT_AddChild, explosion_integer =
-					IntegerObject,
+					(struct Gadget*)IntegerObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Explosion_Integer,
 						INTEGER_Number, 15,
@@ -413,7 +413,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 					LAYOUT_Orientation, LAYOUT_HORIZONTAL,
 					/* Decay Slider */
 					LAYOUT_AddChild, decay_slider =
-					SliderObject,
+					(struct Gadget*)SliderObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Decay,
 						SLIDER_Level, 10,
@@ -425,7 +425,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
 					/* Decay Integer */
 					LAYOUT_AddChild, decay_integer =
-					IntegerObject,
+					(struct Gadget*)IntegerObject,
 						GA_RelVerify, TRUE,
 						GA_ID, GA_Decay_Integer,
 						INTEGER_Number, 10,
@@ -446,7 +446,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
                 /* Screen mode requester */
 				LAYOUT_AddChild, screenmode_requester =
-                GetScreenModeObject,
+                (struct Gadget*)GetScreenModeObject,
                     GA_RelVerify, TRUE,
                     GA_ID, GA_ScreenMode,
                     GETSCREENMODE_FilterFunc, ScreenmodeHook,
@@ -464,29 +464,29 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 		if (bpws->rootLayout != NULL)
 		{
 			ica_targets[0].ti_Data = (ULONG)speed_integer;
-			IIntuition->SetAttrsA(speed_slider, ica_targets);
+			IIntuition->SetAttrsA((Object*)speed_slider, ica_targets);
 			ica_targets[0].ti_Data = (ULONG)speed_slider;
-			IIntuition->SetAttrsA(speed_integer, ica_targets);
+			IIntuition->SetAttrsA((Object*)speed_integer, ica_targets);
 
 			ica_targets[0].ti_Data = (ULONG)balls_integer;
-			IIntuition->SetAttrsA(balls_slider, ica_targets);
+			IIntuition->SetAttrsA((Object*)balls_slider, ica_targets);
 			ica_targets[0].ti_Data = (ULONG)balls_slider;
-			IIntuition->SetAttrsA(balls_integer, ica_targets);
+			IIntuition->SetAttrsA((Object*)balls_integer, ica_targets);
 
 			ica_targets[0].ti_Data = (ULONG)ballsize_integer;
-			IIntuition->SetAttrsA(ballsize_slider, ica_targets);
+			IIntuition->SetAttrsA((Object*)ballsize_slider, ica_targets);
 			ica_targets[0].ti_Data = (ULONG)ballsize_slider;
-			IIntuition->SetAttrsA(ballsize_integer, ica_targets);
+			IIntuition->SetAttrsA((Object*)ballsize_integer, ica_targets);
 
 			ica_targets[0].ti_Data = (ULONG)explosion_integer;
-			IIntuition->SetAttrsA(explosion_slider, ica_targets);
+			IIntuition->SetAttrsA((Object*)explosion_slider, ica_targets);
 			ica_targets[0].ti_Data = (ULONG)explosion_slider;
-			IIntuition->SetAttrsA(explosion_integer, ica_targets);
+			IIntuition->SetAttrsA((Object*)explosion_integer, ica_targets);
 
 			ica_targets[0].ti_Data = (ULONG)decay_integer;
-			IIntuition->SetAttrsA(decay_slider, ica_targets);
+			IIntuition->SetAttrsA((Object*)decay_slider, ica_targets);
 			ica_targets[0].ti_Data = (ULONG)decay_slider;
-			IIntuition->SetAttrsA(decay_integer, ica_targets);
+			IIntuition->SetAttrsA((Object*)decay_integer, ica_targets);
 		}
 
 		result = TRUE;
@@ -528,37 +528,37 @@ void GUIEventFunc(struct Hook* hook, struct BlankerModuleIFace* Self, struct Bla
 	    {
 			case GA_Speed:
 			case GA_Speed_Integer:
-				IIntuition->GetAttr(INTEGER_Number, speed_integer, &attr);
+				IIntuition->GetAttr(INTEGER_Number, (Object*)speed_integer, &attr);
 				bd->speed = attr / 100.0f;
 				refetch |= TRUE;
 				break;
 			case GA_Balls:
 			case GA_Balls_Integer:
-				IIntuition->GetAttr(INTEGER_Number, balls_integer, &attr);
+				IIntuition->GetAttr(INTEGER_Number, (Object*)balls_integer, &attr);
 				bd->balls = attr;
 				refetch |= TRUE;
 				break;
 			case GA_BallSize:
 			case GA_BallSize_Integer:
-				IIntuition->GetAttr(INTEGER_Number, ballsize_integer, &attr);
+				IIntuition->GetAttr(INTEGER_Number, (Object*)ballsize_integer, &attr);
 				bd->ballSize = attr / 10.0f;
 				refetch |= TRUE;
 				break;
 			case GA_Explosion:
 			case GA_Explosion_Integer:
-				IIntuition->GetAttr(INTEGER_Number, explosion_integer, &attr);
+				IIntuition->GetAttr(INTEGER_Number, (Object*)explosion_integer, &attr);
 				bd->explosion = attr / 1.0f;
 				refetch |= TRUE;
 				break;
 			case GA_Decay:
 			case GA_Decay_Integer:
-				IIntuition->GetAttr(INTEGER_Number, decay_integer, &attr);
+				IIntuition->GetAttr(INTEGER_Number, (Object*)decay_integer, &attr);
 				bd->decay = attr / 100.0f;
 				refetch |= TRUE;
 				break;
 			case GA_ScreenMode:
 				RequestScreenMode((Object*)screenmode_requester, bd->WinInfo.window);
-				IIntuition->GetAttr(GETSCREENMODE_DisplayID, screenmode_requester, &attr);
+				IIntuition->GetAttr(GETSCREENMODE_DisplayID, (Object*)screenmode_requester, &attr);
 				bd->screenmodeID = attr;
 				break;
 			default:

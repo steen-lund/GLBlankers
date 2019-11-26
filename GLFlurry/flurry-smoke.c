@@ -250,7 +250,7 @@ void UpdateSmoke_ScalarFrsqrte(global_info_t *global, flurry_info_t *flurry, Smo
 
                     reciprocal square-root estimate replaced above divide and call to system sqrt()
                 
-				*/	  asm("frsqrte %0, %1" : "=f" (mag) : "f" (rsquared));
+				*/	  __asm("frsqrte %0, %1" : "=f" (mag) : "f" (rsquared));
                     mag *= f;
 
 
