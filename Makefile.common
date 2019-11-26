@@ -5,7 +5,7 @@ RM      = rm -f
 OPTIMIZE= -O3
 DEBUG   = -g -gdwarf-2
 MODE = $(OPTIMIZE)
-CFLAGS  = -I../Common -DUSE_GL=1 -DLIBNAME=\"$(TARGET)\" -D__AMIGADATE__=\"`date +"%d.%m.%Y"`\" -Wall $(MODE)
+CFLAGS  = -std=c99 -I../Common -DUSE_GL=1 -DLIBNAME=\"$(TARGET)\" -D__AMIGADATE__=\"`date +"%d.%m.%Y"`\" -Wall $(MODE)
 
 # Flags passed to gcc during linking
 LINK    =  -nostartfiles $(MODE)

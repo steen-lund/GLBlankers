@@ -51,6 +51,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdlib.h>
 #include <math.h>
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 static GLubyte smallTextureArray[32][32];
 static GLubyte bigTextureArray[256][256][2];
 GLuint theTexture = 0;

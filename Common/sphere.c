@@ -18,6 +18,11 @@
 #include <math.h>
 #include <stdlib.h>
 
+#ifndef M_PI
+#define M_PI 3.1415627165242f
+#define M_PI_2 M_PI * 0.5f
+#endif
+
 #ifdef HAVE_CONFIG_H
 # include "config.h"
 #endif

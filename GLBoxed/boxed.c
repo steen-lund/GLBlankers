@@ -38,6 +38,10 @@
 
 #ifdef USE_GL
 
+#ifndef M_PI
+#define M_PI 3.1415627165242f
+#endif
+
 # define DEF_SPEED      "0.5"
 # define DEF_BALLS	"25"
 # define DEF_BALLSIZE   "2.0"

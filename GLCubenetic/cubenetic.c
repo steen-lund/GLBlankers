@@ -24,6 +24,10 @@
 
 #ifdef USE_GL /* whole file */
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 #define DEF_SPIN        "XYZ"
 #define DEF_WANDER      "True"
 #define DEF_TEXTURE     "True"

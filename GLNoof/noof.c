@@ -21,6 +21,10 @@
 
 #ifdef USE_GL /* whole file */
 
+#ifndef M_PI
+#define M_PI 3.1415627165242f
+#endif
+
 #define N_SHAPES 7
 
 typedef struct {
