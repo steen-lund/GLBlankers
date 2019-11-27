@@ -37,12 +37,6 @@
 
 extern unsigned char Matrix3_half2[];
 
-#ifdef __GNUC__
-  __extension__  /* don't warn about "string length is greater than the length
-                    ISO C89 compilers are required to support" when including
-                    the following XPM file... */
-#endif
-
 #ifndef M_PI
 #define M_PI 3.1415627165242f
 #endif
@@ -51,40 +45,58 @@ extern unsigned char Matrix3_half2[];
 
 #define CHAR_COLS 16
 #define CHAR_ROWS 13
-static int real_char_rows;
 
-static int matrix_encoding[] = { 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-                                 192, 193, 194, 195, 196, 197, 198, 199,
-                                 200, 201, 202, 203, 204, 205, 206, 207 };
-static int decimal_encoding[]  = { 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 };
-static int hex_encoding[]      = { 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-                                   33, 34, 35, 36, 37, 38 };
-static int binary_encoding[] = { 16, 17 };
-static int dna_encoding[]    = { 33, 35, 39, 52 };
-#if 0
-static unsigned char char_map[256] = {
-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  /*   0 */
-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  /*  16 */
-    0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,  /*  32 */
+static const int matrix_encoding[] = {
+    16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+# if 0
+    192, 193, 194, 195, 196, 197, 198, 199,
+    200, 201, 202, 203, 204, 205, 206, 207
+# else
+    160, 161, 162, 163, 164, 165, 166, 167,
+    168, 169, 170, 171, 172, 173, 174, 175
+# endif
+  };
+static const int decimal_encoding[]  = {
+  16, 17, 18, 19, 20, 21, 22, 23, 24, 25 };
+static const int hex_encoding[] = {
+  16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 33, 34, 35, 36, 37, 38 };
+static const int binary_encoding[] = { 16, 17 };
+static const int dna_encoding[]    = { 33, 35, 39, 52 };
+
+static const unsigned char char_map[256] = {
+   96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96,  /*   0 */
+   96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96,  /*  16 */
+    0,  1,  2, 96,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,  /*  32 */
    16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,  /*  48 */
    32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,  /*  64 */
    48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,  /*  80 */
    64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79,  /*  96 */
    80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95,  /* 112 */
-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  /* 128 */
-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  /* 144 */
+   96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96,  /* 128 */
+   96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96,  /* 144 */
    96, 97, 98, 99,100,101,102,103,104,105,106,107,108,109,110,111,  /* 160 */
   112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,  /* 176 */
   128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,  /* 192 */
   144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,  /* 208 */
+#if 0
   160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,  /* 224 */
   176,177,178,195,180,181,182,183,184,185,186,187,188,189,190,191   /* 240 */
+#else /* see spank_image() */
+   96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96,  /* 224 */
+   96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96,  /* 240 */
+#endif
 };
-#endif /* 0 */
 
 #define CURSOR_GLYPH 97
 
-static struct { GLfloat x, y; } nice_views[] = {
+/* #define DEBUG */
+
+#define GRID_SIZE  70     /* width and height of the arena */
+#define GRID_DEPTH 35     /* depth of the arena */
+#define WAVE_SIZE  22     /* periodicity of color (brightness) waves */
+#define SPLASH_RATIO 0.7  /* ratio of GRID_DEPTH where chars hit the screen */
+
+static const struct { GLfloat x, y; } nice_views[] = {
   {  0,     0 },
   {  0,   -20 },     /* this is a list of viewer rotations that look nice. */
   {  0,    20 },     /* every now and then we switch to a new one.         */
@@ -104,17 +116,16 @@ static struct { GLfloat x, y; } nice_views[] = {
   {  0,     0 },
 };
 
-matrix_configuration mps;
 
-static GLfloat brightness_ramp[WAVE_SIZE];
 
 static GLfloat speed = 1.0f;
 static GLfloat density = 20.0f;
+static BOOL do_clock;
+static char *timefmt;
 static BOOL do_fog = TRUE;
 static BOOL do_waves = TRUE;
 static BOOL do_rotate = TRUE;
 static BOOL do_texture = TRUE;
-static char *mode_str = "matrix";
 
 /* Re-randomize the state of one strip.
  */
@@ -122,6 +133,7 @@ static void reset_strip(strip *s)
 {
 	matrix_configuration *mp = &mps;
 	int i;
+  	BOOL time_displayed_p = FALSE;  /* never display time twice in one strip */
 
 	memset (s, 0, sizeof(*s));
 	s->x = (GLfloat) (frand((double)GRID_SIZE) - (GRID_SIZE / 2.0));
@@ -145,14 +157,37 @@ static void reset_strip(strip *s)
 
 	for (i = 0; i < GRID_SIZE; i++)
 	{
-		int draw_p = (random() % 7);
-		int spin_p = (draw_p && !(random() % 20));
-		int g = (draw_p
-					? mp->glyph_map[(random() % mp->nglyphs)] + 1
-					: 0);
+		if (do_clock &&
+			!time_displayed_p &&
+			(i < GRID_SIZE-5) &&   /* display approx. once per 5 strips */
+			!(random() % (GRID_SIZE-5)*5))
+		{
+			int j;
+			char text[80];
+			time_t now = time ((time_t *) 0);
+			struct tm *tm = localtime (&now);
+			strftime (text, sizeof(text)-1, timefmt, tm);
 
-		if (spin_p) g = -g;
-		s->glyphs[i] = g;
+			/* render time into the strip */
+			for (j = 0; j < strlen(text) && i < GRID_SIZE; j++, i++)
+			{
+				s->glyphs[i] = char_map [((unsigned char *) text)[j]] + 1;
+				s->highlight[i] = TRUE;
+			}
+
+			time_displayed_p = TRUE;	
+		}
+		else
+		{
+			int draw_p = (random() % 7);
+			int spin_p = (draw_p && !(random() % 20));
+			int g = (draw_p
+				? mp->glyph_map[(random() % mp->nglyphs)] + 1
+				: 0);
+			if (spin_p) g = -g;
+			s->glyphs[i] = g;
+			s->highlight[i] = FALS;
+		}
 	}
 
 	s->spinner_glyph = - (mp->glyph_map[(random() % mp->nglyphs)] + 1);
@@ -224,9 +259,9 @@ static void tick_strip(strip *s)
 
 /* Draw a single character at the given position and brightness.
  */
-static void draw_glyph(int glyph,
-								GLfloat x, GLfloat y, GLfloat z,
-								GLfloat brightness)
+static void draw_glyph(int glyph, BOOL highlight,
+					   GLfloat x, GLfloat y, GLfloat z,
+					   GLfloat brightness)
 {
 	matrix_configuration *mp = &mps;
 	GLfloat w = mp->tex_char_width;
@@ -252,7 +287,7 @@ static void draw_glyph(int glyph,
 		int ccx = ((glyph - 1) % CHAR_COLS);
 		int ccy = ((glyph - 1) / CHAR_COLS);
 		cx = ccx * w;
-		cy = (real_char_rows - ccy - 1) * h;
+		cy = (mp->real_char_rows - ccy - 1) * h;
 
 		if (do_fog)
 		{
@@ -264,15 +299,17 @@ static void draw_glyph(int glyph,
 	}
 
 	{
-		GLfloat r, g, b, a = 1;
+		GLfloat r, g, b, a;
+
+		if (highlight)
+			brightness *= 2;
+
 		if (!do_texture && !spinner_p)
-		{
-			r = b = 0, g = brightness;
-		}
+			r = b = 0, g = 1;
 		else
-		{
-			r = g = b = brightness;
-		}
+			r = g = b = 1;
+
+		a = brightness;
 
 		/*	If the glyph is very close to the screen (meaning it is very large,
 			and is about to splash into the screen and vanish) then start fading
@@ -293,26 +330,8 @@ static void draw_glyph(int glyph,
 				i = WAVE_SIZE-1;
 			}
 
-			a = brightness_ramp[i];
-#if 1
-			/*	I don't understand this -- if I change the alpha on the color of
-				the quad, I'd expect that to make the quad more transparent.
-				But instead, it seems to be making the transparent parts of the
-				texture on the quad be *less* transparent!  So as we fade out,
-				we fade towards a completely solid rectangle.  WTF?
-
-				So, for now, instead of changing the alpha, just make the colors
-				be darker.  This isn't quite right (it causes a large dark glyph
-				to occlude the brighter glyphs behind it) but it's close...
-			*/
-
-			r *= a;
-			g *= a;
-			b *= a;
-			a = 1;
-#endif
+			a *= mp->brightness_ramp[i];
 		}
-
 
 		glColor4f(r,g,b,a);
 	}
@@ -324,38 +343,39 @@ static void draw_glyph(int glyph,
 	glTexCoord2f(cx + w, cy + h); glVertex3f (x + S, y + S, z);
 	glTexCoord2f(cx,     cy + h); glVertex3f (x,     y + S, z);
 	glEnd ();
-
 }
-
 
 /* Draw all the visible glyphs in the strip.
  */
 static void draw_strip(strip *s)
 {
+	matrix_configuration *mp = &mps;
 	int i;
 	for (i = 0; i < GRID_SIZE; i++)
 	{
 		int g = s->glyphs[i];
-		BOOL below_p = (s->spinner_y >= i);
+		Bool below_p = (s->spinner_y >= i);
 
 		if (s->erasing_p)
 			below_p = !below_p;
 
 		if (g && below_p)       /* don't draw cells below the spinner */
 		{
-			GLfloat brightness = 1.0f;
-			if (do_waves)
+			GLfloat brightness;
+			if (!do_waves)
+				brightness = 1.0;
+			else
 			{
 				int j = WAVE_SIZE - ((i + (GRID_SIZE - s->wave_position)) % WAVE_SIZE);
-				brightness = brightness_ramp[j];
+				brightness = mp->brightness_ramp[j];
 			}
 
-			draw_glyph(g, s->x, s->y - i, s->z, brightness);
+			draw_glyph (mi, g, s->highlight[i], s->x, s->y - i, s->z, brightness);
 		}
 	}
 
 	if (!s->erasing_p)
-		draw_glyph(s->spinner_glyph, s->x, s->y - s->spinner_y, s->z, 1.0);
+		draw_glyph (mi, s->spinner_glyph, FALSE, s->x, s->y - s->spinner_y, s->z, 1.0);
 }
 
 
@@ -397,9 +417,9 @@ static void auto_track()
 	/* if we're not moving, maybe start moving.  Otherwise, do nothing. */
 	if (! mp->auto_tracking_p)
 	{
-		static int tick = 0;
-		if (++tick < 20/speed) return;
-		tick = 0;
+		if (++mp->track_tick < 20/speed) return;
+
+		mp->track_tick = 0;
 		if (! (random() % 20))
 			mp->auto_tracking_p = TRUE;
 		else
@@ -487,7 +507,7 @@ static void spank_image(XImage *xi)
 	unsigned char *bits = (unsigned char *) xi->data;
 	unsigned char *from, *to, *s, *end;
 	int L = xi->bytes_per_line * ch;
-	int i;
+	/* int i; */
 
 	/* Copy row 12 into 10 (which really means, copy 2 into 0,
 		since texture data is upside down.).
@@ -517,13 +537,15 @@ static void spank_image(XImage *xi)
 		*s++ = 0;
 
 	xi->height -= (cut * ch);
-	real_char_rows -= cut;
+	mp->real_char_rows -= cut;
 
+#if 0
 	/* Finally, pull the map indexes back to match the new bits.
 	*/
 	for (i = 0; i < countof(matrix_encoding); i++)
 		if (matrix_encoding[i] > (CHAR_COLS * (CHAR_ROWS - cut)))
 			matrix_encoding[i] -= (cut * CHAR_COLS);
+#endif
 }
 
 static void load_textures(BOOL flip_p, BOOL invertAlpha)
@@ -543,14 +565,14 @@ static void load_textures(BOOL flip_p, BOOL invertAlpha)
 	{
 		orig_w = xi->width;
 		orig_h = xi->height;
-		real_char_rows = CHAR_ROWS;
+		mp->real_char_rows = CHAR_ROWS;
 
 		spank_image(xi);
 
-		if (xi->height != 256 && xi->height != 1024)
+		if (xi->height != 512 && xi->height != 1024)
 		{
 			uint32 oldsize = xi->height * xi->bytes_per_line;
-			xi->height = (xi->height < 256 ? 256 : 512);
+			xi->height = (xi->height < 512 ? 512 : 1024);
 			uint32 newsize = xi->height * xi->bytes_per_line;
 			APTR* temp = IExec->AllocVecTags(xi->height * xi->bytes_per_line, AVT_ClearWithValue, 0, TAG_DONE);
 
@@ -560,15 +582,15 @@ static void load_textures(BOOL flip_p, BOOL invertAlpha)
 				IExec->CopyMem(xi->data, temp, newsize);
 			
 			IExec->FreeVec(xi->data);
-			xi->data = (unsigned long*)temp; //IExec->ReallocVec(xi->data, xi->height * xi->bytes_per_line, 0);
+			xi->data = (unsigned long*)temp;
 			if (!xi->data)
 			{
 				exit(1);
 			}
 		}
 
-		if (xi->width != 256) abort();
-		if (xi->height != 256 /*&& xi->height != 512*/) abort();
+		if (xi->width != 512) abort();
+		if (xi->height != 512 && xi->height != 1024) abort();
 
 		/* char size in pixels */
 		cw = orig_w / CHAR_COLS;
@@ -603,7 +625,7 @@ static void load_textures(BOOL flip_p, BOOL invertAlpha)
 		*/
 		{
 			int rpos, gpos, bpos, apos;  /* bitfield positions */
-#if 1
+#if 0
 			/*	#### Cherub says that the little-endian case must be taken on MacOSX,
 				or else the colors/alpha are the wrong way around.  How can
 				that be the case?
@@ -627,7 +649,7 @@ static void load_textures(BOOL flip_p, BOOL invertAlpha)
 					unsigned char r = (p >> rpos) & 0xFF;
 					unsigned char g = (p >> gpos) & 0xFF;
 					unsigned char b = (p >> bpos) & 0xFF;
-					unsigned char a = ~g;
+					unsigned char a = g;
 					g = 0xFF;
 					p = (r << rpos) | (g << gpos) | (b << bpos) | (a << apos);
 					XPutPixel (xi, x, y, p);
@@ -639,7 +661,7 @@ static void load_textures(BOOL flip_p, BOOL invertAlpha)
 		/*	clear_gl_error(); */
 		glGenTextures (1, &mp->texture);
 
-		glPixelStorei (GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei (GL_UNPACK_ALIGNMENT, 4);
 		/*glPixelStorei (GL_UNPACK_ROW_LENGTH, xi->width);*/
 		glBindTexture (GL_TEXTURE_2D, mp->texture);
 		/*  check_gl_error ("texture init"); */
@@ -751,7 +773,7 @@ void init_matrix(struct BlankerData* bd)
 		exit (1);
 	}
 
-	glShadeModel(GL_FLAT);
+	glShadeModel(GL_SMOOTH);
 
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
@@ -759,10 +781,7 @@ void init_matrix(struct BlankerData* bd)
 
 	if (do_texture)
 	{
-		load_textures(flip_p, bd->invertAlpha);
-		glEnable(GL_TEXTURE_2D);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
+		load_textures(flip_p, FALSE);
 	}
 
 	/* to scale coverage-percent to strips, this number looks about right... */
@@ -864,6 +883,18 @@ void draw_matrix()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glPushMatrix ();
+  if (do_texture)
+    {
+      glEnable(GL_TEXTURE_2D);
+      glEnable(GL_BLEND);
+
+      /* Jeff Epler points out:
+         By using GL_ONE instead of GL_SRC_ONE_MINUS_ALPHA, glyphs are
+         added to each other, so that a bright glyph with a darker one
+         in front is a little brighter than the bright glyph alone.
+       */
+      glBlendFunc (GL_SRC_ALPHA, GL_ONE);
+    }
 
 	if (do_rotate)
 	{
