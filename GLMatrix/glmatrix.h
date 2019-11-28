@@ -39,7 +39,7 @@ typedef struct {
   int wave_speed;	  /* every this-many frames. */
   int wave_tick;	  /* frame counter. */
 
-  bool highlight[GRID_SIZE];
+  BOOL highlight[GRID_SIZE];
                           /* some glyphs may be highlighted */
 
   unsigned int erasing_p;         /* Whether this strip is on its way out. */

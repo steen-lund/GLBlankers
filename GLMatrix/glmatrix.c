@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <proto/exec.h>
 
 #include "glmatrix.h"
@@ -35,7 +36,7 @@
 #include "blanker.h"
 #include "xi_image.h"
 
-extern unsigned char Matrix3_half2[];
+extern unsigned char matrix3_png[];
 
 #ifndef M_PI
 #define M_PI 3.1415627165242f
@@ -116,12 +117,12 @@ static const struct { GLfloat x, y; } nice_views[] = {
   {  0,     0 },
 };
 
-
+matrix_configuration mps;
 
 static GLfloat speed = 1.0f;
 static GLfloat density = 20.0f;
-static BOOL do_clock;
-static char *timefmt;
+static BOOL do_clock = TRUE;
+static const char *timefmt = " %H%M ";
 static BOOL do_fog = TRUE;
 static BOOL do_waves = TRUE;
 static BOOL do_rotate = TRUE;
@@ -160,7 +161,7 @@ static void reset_strip(strip *s)
 		if (do_clock &&
 			!time_displayed_p &&
 			(i < GRID_SIZE-5) &&   /* display approx. once per 5 strips */
-			!(random() % (GRID_SIZE-5)*5))
+			(random() % (GRID_SIZE-5)*5 == 0))
 		{
 			int j;
 			char text[80];
@@ -186,7 +187,7 @@ static void reset_strip(strip *s)
 				: 0);
 			if (spin_p) g = -g;
 			s->glyphs[i] = g;
-			s->highlight[i] = FALS;
+			s->highlight[i] = FALSE;
 		}
 	}
 
@@ -354,7 +355,7 @@ static void draw_strip(strip *s)
 	for (i = 0; i < GRID_SIZE; i++)
 	{
 		int g = s->glyphs[i];
-		Bool below_p = (s->spinner_y >= i);
+		BOOL below_p = (s->spinner_y >= i);
 
 		if (s->erasing_p)
 			below_p = !below_p;
@@ -370,12 +371,12 @@ static void draw_strip(strip *s)
 				brightness = mp->brightness_ramp[j];
 			}
 
-			draw_glyph (mi, g, s->highlight[i], s->x, s->y - i, s->z, brightness);
+			draw_glyph (g, s->highlight[i], s->x, s->y - i, s->z, brightness);
 		}
 	}
 
 	if (!s->erasing_p)
-		draw_glyph (mi, s->spinner_glyph, FALSE, s->x, s->y - s->spinner_y, s->z, 1.0);
+		draw_glyph (s->spinner_glyph, FALSE, s->x, s->y - s->spinner_y, s->z, 1.0);
 }
 
 
@@ -502,6 +503,8 @@ bigendian (void)
  */
 static void spank_image(XImage *xi)
 {
+	matrix_configuration *mp = &mps;
+
 	int ch = xi->height / CHAR_ROWS;
 	int cut = 2;
 	unsigned char *bits = (unsigned char *) xi->data;
@@ -560,7 +563,7 @@ static void load_textures(BOOL flip_p, BOOL invertAlpha)
 		So we waste some padding rows to round up.
 	*/
 
-	xi = inmemory_png_to_ximage(Matrix3_half2);
+	xi = inmemory_png_to_ximage(matrix3_png);
 	if (NULL != xi)
 	{
 		orig_w = xi->width;
@@ -608,7 +611,7 @@ static void load_textures(BOOL flip_p, BOOL invertAlpha)
 		{
 			int xx, col;
 			unsigned long buf[100];
-			for (y = 0; y < xi->height; y++)
+			for (y = 0; y < xi->height - (2 * ch) - 3 ; y++)
 			{
 				for (col = 0, xx = 0; col < CHAR_COLS; col++, xx += cw)
 				{
@@ -625,7 +628,7 @@ static void load_textures(BOOL flip_p, BOOL invertAlpha)
 		*/
 		{
 			int rpos, gpos, bpos, apos;  /* bitfield positions */
-#if 0
+#if 1
 			/*	#### Cherub says that the little-endian case must be taken on MacOSX,
 				or else the colors/alpha are the wrong way around.  How can
 				that be the case?
@@ -695,18 +698,16 @@ static void load_textures(BOOL flip_p, BOOL invertAlpha)
 void init_matrix(struct BlankerData* bd)
 {
 	matrix_configuration *mp = &mps;
-	int wire = FALSE; /*MI_IS_WIREFRAME(mi);*/
 	BOOL flip_p = FALSE;
 	int i;
 
-	if (wire)
-		do_texture = FALSE;
-
-	if (mp->strips != NULL)
+	/*if (mp->strips != NULL)
 	{
-		/* Reinit */
+		// Reinit
 		IExec->FreeVec(mp->strips);
 	}
+	*/
+	mp->strips = NULL;
 
 	mp->button_down_p = FALSE;
 
@@ -717,60 +718,34 @@ void init_matrix(struct BlankerData* bd)
 	do_rotate = bd->rotate;
 
 	switch (bd->encoding)
-    {
-        case 0:
-            mode_str = "matrix";
-            break;
-        case 1:
-            mode_str = "dna";
-            break;
-        case 2:
-            mode_str = "bin";
-            break;
-        case 3:
-            mode_str = "hex";
-            break;
-        case 4:
-            mode_str = "dec";
-            break;
-	}
-
-	if (!mode_str || !*mode_str || !strcasecmp(mode_str, "matrix"))
 	{
-		flip_p = 1;
-		mp->glyph_map = matrix_encoding;
-		mp->nglyphs   = countof(matrix_encoding);
-	}
-	else if (!strcasecmp (mode_str, "dna"))
-	{
-		flip_p = 0;
-		mp->glyph_map = dna_encoding;
-		mp->nglyphs   = countof(dna_encoding);
-	}
-	else if (!strcasecmp (mode_str, "bin") ||
-			!strcasecmp (mode_str, "binary"))
-	{
-		flip_p = 0;
-		mp->glyph_map = binary_encoding;
-		mp->nglyphs   = countof(binary_encoding);
-	}
-	else if (!strcasecmp (mode_str, "hex") ||
-			!strcasecmp (mode_str, "hexadecimal"))
-	{
-		flip_p = 0;
-		mp->glyph_map = hex_encoding;
-		mp->nglyphs   = countof(hex_encoding);
-	}
-	else if (!strcasecmp (mode_str, "dec") ||
-			!strcasecmp (mode_str, "decimal"))
-	{
-		flip_p = 0;
-		mp->glyph_map = decimal_encoding;
-		mp->nglyphs   = countof(decimal_encoding);
-	}
-	else
-	{
-		exit (1);
+		case 0:
+			flip_p = 1;
+			mp->glyph_map = matrix_encoding;
+			mp->nglyphs   = countof(matrix_encoding);
+			break;
+		case 1:
+			flip_p = 0;
+			mp->glyph_map = dna_encoding;
+			mp->nglyphs   = countof(dna_encoding);
+			break;
+		case 2:
+			flip_p = 0;
+			mp->glyph_map = binary_encoding;
+			mp->nglyphs   = countof(binary_encoding);
+			break;
+		case 3:
+			flip_p = 0;
+			mp->glyph_map = hex_encoding;
+			mp->nglyphs   = countof(hex_encoding);
+			break;
+		case 4:
+			flip_p = 0;
+			mp->glyph_map = decimal_encoding;
+			mp->nglyphs   = countof(decimal_encoding);
+			break;
+		default:
+			exit (1);
 	}
 
 	glShadeModel(GL_SMOOTH);
@@ -815,7 +790,7 @@ void init_matrix(struct BlankerData* bd)
 		j *= (M_PI / 2.0f);		/* j ranges from 0.0 - PI/2  */
 		j = sin(j);			/* j ranges from 0.0 - 1.0   */
 		j = 0.2 + (j * 0.8);	/* j ranges from 0.2 - 1.0   */
-		brightness_ramp[i] = j;	/* printf("%2d %8.2f\n", i, j); */
+		mp->brightness_ramp[i] = j;	/* printf("%2d %8.2f\n", i, j); */
 	}
 
 	auto_track_init();
