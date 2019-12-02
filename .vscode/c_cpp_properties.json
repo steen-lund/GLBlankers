@@ -1,13 +1,29 @@
 {
     "env": {
-        "myDefaultIncludePath": ["${workspaceFolder}", "${workspaceFolder}/include"],
+        "myDefaultIncludePath": [
+            "${workspaceFolder}/Common"
+        ],
         "myCompilerPath": "/opt/local/adtools/bin/ppc-amigaos-gcc"
     },
     "configurations": [
         {
             "name": "Amiga",
-            "includePath": ["/opt/local/adtools/ppc-amigaos/SDK/include/include_h"],
-            "defines": ["__amigaos4__","__GNUC__=8","__PPC__", "USE_GL"]
+            "includePath": [
+                "${workspaceFolder}/Common",
+                "/opt/local/adtools/ppc-amigaos/SDK/include/include_h/**",
+                "/opt/local/adtools/ppc-amigaos/include/c++/8.3.0/**"
+            ],
+            "defines": [
+                "__amigaos4__",
+                "__GNUC__=8",
+                "__PPC__",
+                "USE_GL",
+                "LIBNAME=\"blanker\"",
+                "__AMIGADATE__=\"241275\""
+            ],
+            "compilerPath": "/opt/local/adtools/bin/ppc-amigaos-gcc",
+            "intelliSenseMode": "gcc-x86",
+            "cStandard": "c99"
         }
     ],
     "version": 4
