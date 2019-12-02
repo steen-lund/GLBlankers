@@ -39,6 +39,9 @@ typedef struct {
   int wave_speed;	  /* every this-many frames. */
   int wave_tick;	  /* frame counter. */
 
+  BOOL highlight[GRID_SIZE];
+                          /* some glyphs may be highlighted */
+
   unsigned int erasing_p;         /* Whether this strip is on its way out. */
 
 } strip;
@@ -47,7 +50,7 @@ typedef struct {
   GLuint texture;
   int nstrips;
   strip *strips;
-  int *glyph_map;
+  const int *glyph_map;
   int nglyphs;
   GLfloat tex_char_width, tex_char_height;
 
@@ -55,15 +58,19 @@ typedef struct {
   int last_view, target_view;
   GLfloat view_x, view_y;
   int view_steps, view_tick;
-
+   
   unsigned int button_down_p;
   unsigned int auto_tracking_p;
+  int track_tick;
+  int real_char_rows;
+  GLfloat brightness_ramp[WAVE_SIZE];
 
 } matrix_configuration;
 
 extern void init_matrix(struct BlankerData* bd);
 extern void reshape_matrix(int width, int height);
 extern void draw_matrix();
+void free_matrix ();
 
 #ifdef __GNUC__
    #ifdef __PPC__

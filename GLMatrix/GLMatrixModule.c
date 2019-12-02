@@ -75,11 +75,10 @@ void RenderPreview( struct BlankerData *bd )
 		lastBlankingMode = SBBM_NoBlanking;
 
 		// RWO: Lav Init beregninger her
-		// når refetchSetting ændres bliver de beregnet igen
+		// nÃ¥r refetchSetting Ã¦ndres bliver de beregnet igen
 		mglMakeCurrent(PreviewContext);
 		init_matrix(bd);
 		reshape_matrix(w, h);
-
 
 		bd->refetchSettings = FALSE;
 
@@ -135,9 +134,11 @@ void RenderPreview( struct BlankerData *bd )
 				}
 			}
 
-			// Så frem provakere vi et task skift og dermed er der ingen busywaiting
+			// SÃ¥ frem provakere vi et task skift og dermed er der ingen busywaiting
 			IDOS->Delay( 1 );
 	    }
+
+		free_matrix();
     }
 
 //bailout:
@@ -209,7 +210,7 @@ void RenderScreen( struct BlankerData *bd )
 		lastBlankingMode = SBBM_NoBlanking;
 
 		// RWO: Lav Init beregninger her
-		// når refetchSetting ændres bliver de beregnet igen
+		// nÃ¥r refetchSetting Ã¦ndres bliver de beregnet igen
 		mglMakeCurrent(ScreenContext);
 		init_matrix(bd);
 		reshape_matrix(w, h);
@@ -265,9 +266,11 @@ void RenderScreen( struct BlankerData *bd )
 				}
 			}
 
-			// Så frem provakere vi et task skift og dermed er der ingen busywaiting
+			// SÃ¥ frem provakere vi et task skift og dermed er der ingen busywaiting
 			IDOS->Delay( 1 );
 	    }
+
+		free_matrix();
     }
 
 	SetBlankingMode( scr, SBBM_NoBlanking );
