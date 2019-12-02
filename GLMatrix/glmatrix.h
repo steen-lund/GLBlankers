@@ -70,6 +70,7 @@ typedef struct {
 extern void init_matrix(struct BlankerData* bd);
 extern void reshape_matrix(int width, int height);
 extern void draw_matrix();
+void free_matrix ();
 
 #ifdef __GNUC__
    #ifdef __PPC__

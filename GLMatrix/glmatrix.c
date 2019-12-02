@@ -923,6 +923,16 @@ void draw_matrix()
 	glPopMatrix ();
 }
 
+
+void free_matrix ()
+{
+	matrix_configuration *mp = &mps;
+	if (mp->strips)
+		IExec->FreeVec(mp->strips);
+	if (mp->texture)
+		glDeleteTextures (1, &mp->texture);
+}
+
 #endif /* USE_GL */
 
 
