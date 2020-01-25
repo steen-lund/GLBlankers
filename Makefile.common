@@ -33,9 +33,10 @@ revision:
 
 PHONY: install
 install:
-	copy $(TARGET) sys:utilities/blankers
-	copy $(TARGET).info sys:utilities/blankers
-	strip sys:utilities/blankers/$(TARGET)
-	avail flush >NIL:
+	@echo "Packaging $(TARGET)"
+	@mkdir -p ../dist	
+	@cp $(TARGET) ../dist/
+	@cp $(TARGET).info ../dist/
+	@ppc-amigaos-strip ../dist/$(TARGET)
 	@echo "Done."
 
