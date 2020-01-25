@@ -42,7 +42,7 @@
 #define GA_Fog			   0x1007
 #define GA_Wave			   0x1008
 #define GA_Rotate		   0x1009
-#define GA_Invert		   0x1010
+#define GA_Clock		   0x1010
 
 struct Library *        	ButtonBase     		= NULL;
 struct Library *			CheckBoxBase		= NULL;
@@ -68,7 +68,7 @@ struct Gadget *density_slider = NULL, *density_integer = NULL;
 struct Gadget *speed_slider = NULL, *speed_integer = NULL;
 struct Gadget *encoding_chooser = NULL;
 struct Gadget *screenmode_requester = NULL;
-struct Gadget *fog_checkbox = NULL, *wave_checkbox = NULL, *rotate_checkbox = NULL, *invert_checkbox = NULL;
+struct Gadget *fog_checkbox = NULL, *wave_checkbox = NULL, *rotate_checkbox = NULL, *clock_checkbox = NULL;
 struct List *encodings_list;
 
 struct TagItem sl_2_int_map[] =
@@ -423,11 +423,11 @@ BOOL MakeGUI( struct BlankerData *bd, struct BlankerPrefsWindowSetup *bpws )
 						GA_RelVerify, TRUE,
 					CheckBoxEnd,
 
-					/* Invert alpha */
-					LAYOUT_AddChild, invert_checkbox =
+					/* Show time */
+					LAYOUT_AddChild, clock_checkbox =
 					(struct Gadget*)CheckBoxObject,
-						GA_ID, GA_Invert,
-						GA_Text, "_Invert alpha",
+						GA_ID, GA_Clock,
+						GA_Text, "_Show Time",
 						GA_Selected, FALSE,
 						GA_RelVerify, TRUE,
 					CheckBoxEnd,
@@ -520,9 +520,9 @@ void GUIEventFunc( struct Hook *hook, struct BlankerModuleIFace *Self, struct Bl
 				bd->rotate = (BOOL)attr;
 				refetch |= TRUE;
 				break;
-			case GA_Invert:
-				IIntuition->GetAttr(GA_Selected, (Object*)invert_checkbox, &attr);
-				bd->invertAlpha = (BOOL)attr;
+			case GA_Clock:
+				IIntuition->GetAttr(GA_Selected, (Object*)clock_checkbox, &attr);
+				bd->clock = (BOOL)attr;
 				refetch |= TRUE;
 				break;
 			default:
@@ -657,8 +657,8 @@ void UpdateWindowSettings( struct BlankerData *bd )
 	tags[0].ti_Data = (ULONG)bd->rotate;
 	IIntuition->RefreshSetGadgetAttrsA(rotate_checkbox, gui_window, NULL, tags);
 
-	tags[0].ti_Data = (ULONG)bd->invertAlpha;
-	IIntuition->RefreshSetGadgetAttrsA(invert_checkbox, gui_window, NULL, tags);
+	tags[0].ti_Data = (ULONG)bd->clock;
+	IIntuition->RefreshSetGadgetAttrsA(clock_checkbox, gui_window, NULL, tags);
 }
 
 

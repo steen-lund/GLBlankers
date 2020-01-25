@@ -27,8 +27,8 @@ void GetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict)
 	obj = IPrefsObjects->DictGetObjectForKey(dict, "Rotate");
 	IPrefsObjects->PrefsNumber(obj, NULL, ALPONUM_GetBool, &bd->rotate, TAG_DONE);
 
-	obj = IPrefsObjects->DictGetObjectForKey(dict, "InvertAlpha");
-	IPrefsObjects->PrefsNumber(obj, NULL, ALPONUM_GetBool, &bd->invertAlpha, TAG_DONE);
+	obj = IPrefsObjects->DictGetObjectForKey(dict, "ShowClock");
+	IPrefsObjects->PrefsNumber(obj, NULL, ALPONUM_GetBool, &bd->clock, TAG_DONE);
 }
 
 
@@ -63,8 +63,8 @@ void SetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict)
 		"Rotate");
 
 	IPrefsObjects->DictSetObjectForKey( dict,
-		IPrefsObjects->PrefsNumber( NULL, NULL, ALPONUM_AllocSetBool, bd->invertAlpha, TAG_DONE ),
-		"InvertAlpha");
+		IPrefsObjects->PrefsNumber( NULL, NULL, ALPONUM_AllocSetBool, bd->clock, TAG_DONE ),
+		"ShowClock");
 }
 
 

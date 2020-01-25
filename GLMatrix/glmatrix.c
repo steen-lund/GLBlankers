@@ -609,9 +609,13 @@ static void load_textures(BOOL flip_p, BOOL invertAlpha)
 		*/
 		if (flip_p)
 		{
+			/* If showing the clock don't flip to numbers
+			     simply modifying when to stop the loop will take care of this.
+			*/
+			int skip_numbers = do_clock ? (2 * ch) + 3 : 0;
 			int xx, col;
 			unsigned long buf[100];
-			for (y = 0; y < xi->height - (2 * ch) - 3 ; y++)
+			for (y = 0; y < xi->height - skip_numbers ; y++)
 			{
 				for (col = 0, xx = 0; col < CHAR_COLS; col++, xx += cw)
 				{
@@ -716,6 +720,7 @@ void init_matrix(struct BlankerData* bd)
 	do_fog = bd->fog;
 	do_waves = bd->wave;
 	do_rotate = bd->rotate;
+	do_clock = bd->clock;
 
 	switch (bd->encoding)
 	{

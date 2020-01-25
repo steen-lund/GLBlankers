@@ -46,7 +46,7 @@ struct BlankerData {
 	BOOL							fog;
 	BOOL							wave;
 	BOOL							rotate;
-	BOOL                            invertAlpha;
+	BOOL							clock;
 };
 
 int32				_start( 				STRPTR argstring, int32 arglen, APTR SysBase );
