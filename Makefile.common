@@ -10,6 +10,9 @@ CFLAGS  = -std=c99 -I../Common -DUSE_GL=1 -DLIBNAME=\"$(TARGET)\" -D__AMIGADATE_
 # Flags passed to gcc during linking
 LINK    =  -nostartfiles $(MODE)
 
+DEPDIR := .deps
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.d
+
 OBJS    = $(SRCS:.c=.o)
 
 # Rules for building
@@ -17,9 +20,9 @@ $(TARGET): $(OBJS)
 	@echo "Linking: $(TARGET)"
 	@$(CC) $(LINK) -o $(TARGET) $(OBJS) $(LIBS)
 
-$(OBJS) : %.o : %.c ../Makefile ../Makefile.common
+$(OBJS) : %.o : %.c ../Makefile ../Makefile.common $(DEPDIR)/%.d | $(DEPDIR)
 	@echo "Compiling: $<"
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(DEPFLAGS) -c $< -o $@
 
 .PHONY: clean
 clean:
@@ -40,3 +43,9 @@ install:
 	@ppc-amigaos-strip ../dist/$(TARGET)
 	@echo "Done."
 
+$(DEPDIR): ; @mkdir -p $@
+
+DEPFILES := $(SRCS:%.c=$(DEPDIR)/%.d)
+$(DEPFILES):
+
+include $(wildcard $(DEPFILES))

@@ -4,9 +4,10 @@ TARGET  = GLFlurry.blanker
 # Additional linker libraries
 LIBS    = -lGL -lGLU -lm
 
+VPATH = ../Common
+
 # Source code files used in this project
 # Add any additional files to this line
-
 SRCS    = flurry-smoke.c \
 	flurry-spark.c \
 	flurry-star.c \
@@ -15,11 +16,9 @@ SRCS    = flurry-smoke.c \
 	GLFlurry.c \
 	GLFlurry_GUI.c \
 	GLFlurry_Prefs.c \
-	../Common/yarandom.c \
-	../Common/rotator.c \
-	../Common/trackball.c
-
-#SRCS    = blanker.c bitmap.c
+	yarandom.c \
+	rotator.c \
+	trackball.c
 
 # -------------------------------------------------------------
 # Nothing should need changing below this line
