@@ -1,7 +1,5 @@
 #include "blanker.h"
-#include "../Common/GLBlanker_Prefs.h"
-
-#include <proto/application.h>
+#include <GLBlanker_Prefs.h>
 
 void GetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict)
 {

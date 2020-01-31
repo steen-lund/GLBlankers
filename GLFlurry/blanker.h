@@ -1,9 +1,10 @@
-#ifndef _BLANKER_H__
-#define _BLANKER_H__
+#pragma once
+
+#define __BLANKER_H__
 
 #include <libraries/blankermodule.h>
-#include <proto/exec.h>
-#include <proto/blankermodule.h>
+//#include <proto/exec.h>
+//#include <proto/blankermodule.h>
 
 /*------------------------------------------------------------------------*/
 
@@ -55,5 +56,4 @@ struct BlankerData {
 #endif
 
 /*------------------------------------------------------------------------*/
-#endif
 

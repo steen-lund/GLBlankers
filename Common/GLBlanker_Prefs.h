@@ -1,11 +1,12 @@
-#ifndef __BLANKER_PREFS_H__
-#define __BLANKER_PREFS_H__
+#pragma once
 
 #ifndef __BLANKER_H__
 #error Include blanker.h before this
 #endif
 
-#include <libraries/application.h>
+#include <interfaces/application.h>
+
+extern struct PrefsObjectsIFace*	IPrefsObjects;
 
 void GetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict);
 void SetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict);
@@ -43,5 +44,3 @@ void SetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict);
 	IPrefsObjects->DictSetObjectForKey( dict, \
 		IPrefsObjects->PrefsNumber( NULL, NULL, ALPONUM_AllocSetBool, VAR, TAG_DONE ), \
 		NAME);}
-
-#endif

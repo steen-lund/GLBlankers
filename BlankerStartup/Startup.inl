@@ -25,10 +25,15 @@
 #include <string.h>
 #include <stdio.h>
 
+#include <yarandom.h>
+
 #define MINIGL 1
 #include <GL/gl.h>
 #include <proto/minigl.h>
 
+#include <GLBlanker_Prefs.h>
+
+#define DebugLevel  0
 
 /* -- Global Constants -- */
 /// Libraries and Interfaces
@@ -68,29 +73,39 @@ struct GLContextIFace *ScreenContext = NULL;
 
 const char __attribute__((used)) verstag[] = VERSTAG;
 
-struct Library *	_manager_Init( 			struct BlankerBase *libBase, APTR seglist, struct ExecIFace *myIExec );
-uint32 				_manager_Obtain( 		struct LibraryManagerInterface *Self );
-uint32 				_manager_Release(		struct LibraryManagerInterface *Self );
-struct Library *	_manager_Open(			struct LibraryManagerInterface *Self, uint32 version );
-APTR 				_manager_Close( 		struct LibraryManagerInterface *Self );
-APTR 				_manager_Expunge( 		struct LibraryManagerInterface *Self );
+struct Library*		_manager_Init( 			struct BlankerBase* libBase, APTR seglist, struct ExecIFace* myIExec );
+uint32 				_manager_Obtain( 		struct LibraryManagerInterface* Self );
+uint32 				_manager_Release(		struct LibraryManagerInterface* Self );
+struct Library*		_manager_Open(			struct LibraryManagerInterface* Self, uint32 version );
+APTR 				_manager_Close( 		struct LibraryManagerInterface* Self );
+APTR 				_manager_Expunge( 		struct LibraryManagerInterface* Self );
 
-uint32 				_blanker_Obtain( 		struct BlankerModuleIFace *Self );
-uint32 				_blanker_Release( 		struct BlankerModuleIFace *Self );
-uint32				_blanker_Expunge( 		struct BlankerModuleIFace *Self );
-struct Interface *	_blanker_Clone( 		struct BlankerModuleIFace *Self );
-BOOL 				_blanker_Get( 			struct BlankerModuleIFace *Self, uint32 msgType, uint32 *msgData );
-BOOL 				_blanker_Set(			struct BlankerModuleIFace *Self, uint32 msgType, uint32 msgData );
-void 				_blanker_Blank(			struct BlankerModuleIFace *Self );
+uint32 				_blanker_Obtain( 		struct BlankerModuleIFace* Self );
+uint32 				_blanker_Release( 		struct BlankerModuleIFace* Self );
+uint32				_blanker_Expunge( 		struct BlankerModuleIFace* Self );
+struct Interface*	_blanker_Clone( 		struct BlankerModuleIFace* Self );
+BOOL 				_blanker_Get( 			struct BlankerModuleIFace* Self, uint32 msgType, uint32* msgData );
+BOOL 				_blanker_Set(			struct BlankerModuleIFace* Self, uint32 msgType, uint32 msgData );
+void 				_blanker_Blank(			struct BlankerModuleIFace* Self );
 
 uint32 				OpenLibraries( 			void );
 void 				CloseLibraries( 		void );
 
-void 				ResetSettingsToDefault( struct BlankerData *bd );
-void 				UpdateWindowSettings( 	struct BlankerData *bd );
+void 				ResetSettingsToDefault( struct BlankerData* bd );
+void 				UpdateWindowSettings( 	struct BlankerData* bd );
 
-void 				RenderPreview( 			struct BlankerData *bd );
-void 				RenderScreen( 			struct BlankerData *bd );
+void 				RenderPreview( 			struct BlankerData* bd );
+void 				RenderScreen( 			struct BlankerData* bd );
+
+uint32				OpenGUILibraries();
+void				CloseGUILibraries();
+BOOL				MakeGUI(				struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws);
+void				DestroyGUI();
+
+void				InitBlanker(			struct BlankerData* bd);
+void				DeinitBlanker();
+void				ReshapeBlanker(			int width, int height);
+void				DrawBlanker();
 
 const APTR Manager_Vectors[] =
 {
@@ -1011,3 +1026,272 @@ void SetBlankingMode( struct Screen *screen, uint32 mode )
 }
 ///
 
+/// RenderPreview
+void RenderPreview( struct BlankerData *bd )
+{
+	uint32 run;
+	uint32 w;
+	uint32 h;
+	static uint32 old_w, old_h;
+
+	run = FALSE;
+
+#if DebugLevel > 0
+	IExec->DebugPrintF( "--> RenderPreview\n" );
+#endif
+
+	w = bd->blankerRender->blankWidth;
+	h = bd->blankerRender->blankHeight;
+
+#if DebugLevel > 0
+	IExec->DebugPrintF("W: %ld, H: %ld\n", w, h);
+#endif
+
+	if (PreviewContext == NULL || old_w != w || old_h != h)
+	{
+		if (PreviewContext != NULL)
+		{
+			DeletePreviewContext();
+		}
+
+		if (CreatePreviewContext(bd, w, h))
+		{
+			run = TRUE;
+			old_w = w;
+			old_h = h;
+		}
+		else
+		{
+			return;
+		}
+	}
+	else
+	{
+		run = TRUE;
+	}
+	
+	while( run == TRUE )
+    {
+		uint32 lastBlankingMode;
+		BOOL activeRendering;
+
+		activeRendering = FALSE;
+		lastBlankingMode = SBBM_NoBlanking;
+
+		// RWO: Lav Init beregninger her
+		// når refetchSetting ændres bliver de beregnet igen
+		mglMakeCurrent(PreviewContext);
+		InitBlanker(bd);
+		ReshapeBlanker(w, h);
+
+		bd->refetchSettings = FALSE;
+
+	    while(( run == TRUE ) && ( bd->refetchSettings == FALSE ))
+	    {
+		    if ( IExec->SetSignal( 0, 0 ) & bd->blankerRender->taskSigBreak )
+		    {
+			    run = FALSE;
+			    break;
+		    }
+
+			if ( bd->currentBlankingMode != lastBlankingMode )
+			{
+				// something has changed...
+
+				switch( bd->currentBlankingMode )
+				{
+					case SBBM_Preview:
+					case SBBM_Blanking:
+					{
+						if ( IGraphics->GetBitMapAttr( bd->blankerRender->rp->BitMap, BMA_DEPTH ) > 8 )
+						{
+							activeRendering = TRUE;
+						}
+						break;
+					}
+
+					default:
+					{
+						activeRendering = FALSE;
+						break;
+					}
+				}
+
+				lastBlankingMode = bd->currentBlankingMode;
+			}
+
+			if ( activeRendering )
+			{
+
+
+				// RWO: Lav din main beregninger her
+				mglMakeCurrent(PreviewContext);
+				mglLockDisplay();
+				DrawBlanker();
+				mglUnlockDisplay();
+
+				IGraphics->BltBitMapRastPort(previewBitMap, 0, 0, bd->blankerRender->rp, 0, 0, w, h, 0xc0);
+
+				if ( bd->blankerRender->renderHook )
+				{
+					IUtility->CallHookPkt( bd->blankerRender->renderHook, (APTR)BMRHM_FrameRendered, (APTR)0 );
+				}
+			}
+
+			// Så frem provakere vi et task skift og dermed er der ingen busywaiting
+			IDOS->Delay( 1 );
+	    }
+
+		DeinitBlanker();
+    }
+
+//bailout:
+	}
+///
+
+/// RenderScreen
+void RenderScreen( struct BlankerData *bd )
+{
+	struct Screen *scr;
+	struct Window *win;
+	Object *MouseObject;
+	uint32 run;
+	uint32 w;
+	uint32 h;
+
+	MouseObject = NULL;
+    run = TRUE;
+    win = NULL;
+
+#if DebugLevel > 0
+	IExec->DebugPrintF( "--> RenderScreen\n" );
+#endif
+
+	w = IP96->p96GetModeIDAttr( bd->screenmodeID, P96IDA_WIDTH );
+	h = IP96->p96GetModeIDAttr( bd->screenmodeID, P96IDA_HEIGHT );
+
+#if DebugLevel > 0
+	IExec->DebugPrintF( "    width: %ld, height: %ld\n", w, h);
+#endif
+
+	
+	ScreenContext = IMiniGL->CreateContextTags( MGLCC_ScreenMode, bd->screenmodeID,
+											MGLCC_Width, w,
+											MGLCC_Height, h,
+											TAG_END);
+	if (ScreenContext != NULL)
+	{
+		mglMakeCurrent(ScreenContext);
+		mglLockMode(MGL_LOCK_SMART);
+		mglEnableSync(GL_TRUE);
+	}
+	else
+	{
+		goto bailout;
+	}
+
+	win = ScreenContext->GetWindowHandle();
+	scr = win->WScreen;
+
+	MouseObject = IIntuition->NewObject( NULL, "pointerclass",
+		POINTERA_BitMap,    &PointerBitmap,
+		POINTERA_XOffset,   0,
+		POINTERA_YOffset,   0,
+		TAG_END
+	);
+
+	if ( MouseObject == NULL )
+	{
+	    goto bailout;
+	}
+
+	while( run == TRUE )
+    {
+		uint32 lastBlankingMode;
+		BOOL activeRendering;
+
+		activeRendering = FALSE;
+		lastBlankingMode = SBBM_NoBlanking;
+
+		// RWO: Lav Init beregninger her
+		// når refetchSetting ændres bliver de beregnet igen
+		mglMakeCurrent(ScreenContext);
+		InitBlanker(bd);
+		ReshapeBlanker(w, h);
+
+		bd->refetchSettings = FALSE;
+	    while(( run == TRUE ) && ( bd->refetchSettings == FALSE ))
+	    {
+		    if ( IExec->SetSignal( 0, 0 ) & bd->blankerRender->taskSigBreak )
+		    {
+			    run = FALSE;
+			    break;
+		    }
+
+			if ( bd->currentBlankingMode != lastBlankingMode )
+			{
+				// something has changed...
+
+				SetBlankingMode( scr, bd->currentBlankingMode );
+
+				switch( bd->currentBlankingMode )
+				{
+					case SBBM_Preview:
+					case SBBM_Blanking:
+					{
+						if ( IGraphics->GetBitMapAttr( win->RPort->BitMap, BMA_DEPTH ) > 8 )
+						{
+							activeRendering = TRUE;
+						}
+						break;
+					}
+
+					default:
+					{
+						activeRendering = FALSE;
+						break;
+					}
+				}
+
+				lastBlankingMode = bd->currentBlankingMode;
+			}
+
+			if ( activeRendering )
+			{
+				// RWO: Lav din main beregninger her
+
+				mglMakeCurrent(ScreenContext);
+				DrawBlanker();
+				mglSwitchDisplay();
+
+				if ( bd->blankerRender->renderHook )
+				{
+					IUtility->CallHookPkt( bd->blankerRender->renderHook, (APTR)BMRHM_FrameRendered, (APTR)0 );
+				}
+			}
+
+			// Så frem provakere vi et task skift og dermed er der ingen busywaiting
+			IDOS->Delay( 1 );
+	    }
+
+		DeinitBlanker();
+    }
+
+	SetBlankingMode( scr, SBBM_NoBlanking );
+
+bailout:
+
+
+	if ( MouseObject )
+	{
+		IIntuition->DisposeObject( MouseObject );
+	}
+
+	if (ScreenContext != NULL)
+	{
+		mglMakeCurrent(ScreenContext);
+		mglDeleteContext();
+		ScreenContext = NULL;
+	}
+}
+///

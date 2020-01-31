@@ -1,14 +1,13 @@
 #include "blanker.h"
-#include "../Common/GLBlanker_Prefs.h"
+#include <GLBlanker_Prefs.h>
 
-#include <proto/application.h>
+#include <interfaces/application.h>
 
 void GetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict)
 {
 	PrefsObject* obj = NULL;
 	GET_PREFS_LONG("ScreenMode", bd->screenmodeID)
 }
-
 
 void SetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict)
 {
