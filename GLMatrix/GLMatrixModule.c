@@ -312,7 +312,7 @@ void ResetSettingsToDefault( struct BlankerData *bd )
    bd->fog			   = TRUE;
    bd->wave			   = TRUE;
    bd->rotate		   = TRUE;
-   bd->invertAlpha	   = FALSE;
+   bd->showTime	   = FALSE;
    bd->refetchSettings = TRUE;
 }
 ///

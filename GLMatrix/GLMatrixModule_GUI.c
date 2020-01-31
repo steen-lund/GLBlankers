@@ -522,7 +522,7 @@ void GUIEventFunc( struct Hook *hook, struct BlankerModuleIFace *Self, struct Bl
 				break;
 			case GA_Clock:
 				IIntuition->GetAttr(GA_Selected, (Object*)clock_checkbox, &attr);
-				bd->clock = (BOOL)attr;
+				bd->showTime = (BOOL)attr;
 				refetch |= TRUE;
 				break;
 			default:
@@ -657,7 +657,7 @@ void UpdateWindowSettings( struct BlankerData *bd )
 	tags[0].ti_Data = (ULONG)bd->rotate;
 	IIntuition->RefreshSetGadgetAttrsA(rotate_checkbox, gui_window, NULL, tags);
 
-	tags[0].ti_Data = (ULONG)bd->clock;
+	tags[0].ti_Data = (ULONG)bd->showTime;
 	IIntuition->RefreshSetGadgetAttrsA(clock_checkbox, gui_window, NULL, tags);
 }
 

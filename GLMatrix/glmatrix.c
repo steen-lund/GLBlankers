@@ -720,7 +720,7 @@ void init_matrix(struct BlankerData* bd)
 	do_fog = bd->fog;
 	do_waves = bd->wave;
 	do_rotate = bd->rotate;
-	do_clock = bd->clock;
+	do_clock = bd->showTime;
 
 	switch (bd->encoding)
 	{
