@@ -6,7 +6,6 @@
 #define VERSION     3
 #define REVISION    0
 #define LIBPRI      0
-#define LIBNAME     "GLBoing.blanker"
 #define LIBVERS     "3.0"
 #define VSTRING     LIBNAME" "LIBVERS" ("__AMIGADATE__")\r\n"
 #define VERSTAG     "\0$VER: "LIBNAME" "LIBVERS" ("__AMIGADATE__")"
@@ -74,7 +73,7 @@ void RenderPreview(struct BlankerData *bd)
 		lastBlankingMode = SBBM_NoBlanking;
 
 		// RWO: Lav Init beregninger her
-		// når refetchSetting ændres bliver de beregnet igen
+		// nï¿½r refetchSetting ï¿½ndres bliver de beregnet igen
 		mglMakeCurrent(PreviewContext);
 		init_boing(bd);
 		reshape_boing(w, h);
@@ -133,7 +132,7 @@ void RenderPreview(struct BlankerData *bd)
 				}
 			}
 
-			// Så frem provakere vi et task skift og dermed er der ingen busywaiting
+			// Sï¿½ frem provakere vi et task skift og dermed er der ingen busywaiting
 			IDOS->Delay( 1 );
 	    }
     }
@@ -208,7 +207,7 @@ void RenderScreen(struct BlankerData* bd)
 		lastBlankingMode = SBBM_NoBlanking;
 
 		// RWO: Lav Init beregninger her
-		// når refetchSetting ændres bliver de beregnet igen
+		// nï¿½r refetchSetting ï¿½ndres bliver de beregnet igen
 		mglMakeCurrent(ScreenContext);
 		init_boing(bd);
 		reshape_boing(w, h);
@@ -264,7 +263,7 @@ void RenderScreen(struct BlankerData* bd)
 				}
 			}
 
-			// Så frem provakere vi et task skift og dermed er der ingen busywaiting
+			// Sï¿½ frem provakere vi et task skift og dermed er der ingen busywaiting
 			IDOS->Delay( 1 );
 	    }
 
