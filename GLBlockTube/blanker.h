@@ -46,32 +46,6 @@ struct BlankerData {
 	BOOL							dofog;
 };
 
-int32				_start( 				STRPTR argstring, int32 arglen, APTR SysBase );
-
-struct Library *	_manager_Init( 			struct BlankerBase *libBase, APTR seglist, struct ExecIFace *myIExec );
-uint32 				_manager_Obtain( 		struct LibraryManagerInterface *Self );
-uint32 				_manager_Release(		struct LibraryManagerInterface *Self );
-struct Library *	_manager_Open(			struct LibraryManagerInterface *Self, uint32 version );
-APTR 				_manager_Close( 		struct LibraryManagerInterface *Self );
-APTR 				_manager_Expunge( 		struct LibraryManagerInterface *Self );
-
-uint32 				_blanker_Obtain( 		struct BlankerModuleIFace *Self );
-uint32 				_blanker_Release( 		struct BlankerModuleIFace *Self );
-uint32				_blanker_Expunge( 		struct BlankerModuleIFace *Self );
-struct Interface *	_blanker_Clone( 		struct BlankerModuleIFace *Self );
-BOOL 				_blanker_Get( 			struct BlankerModuleIFace *Self, uint32 msgType, uint32 *msgData );
-BOOL 				_blanker_Set(			struct BlankerModuleIFace *Self, uint32 msgType, uint32 msgData );
-void 				_blanker_Blank(			struct BlankerModuleIFace *Self );
-
-uint32 				OpenLibraries( 			void );
-void 				CloseLibraries( 		void );
-
-void 				ResetSettingsToDefault( struct BlankerData *bd );
-void 				UpdateWindowSettings( 	struct BlankerData *bd );
-void 				RenderPreview( 			struct BlankerData *bd );
-void 				RenderScreen( 			struct BlankerData *bd );
-void				SetBlankingMode(		struct Screen *screen, uint32 mode );
-
 /*------------------------------------------------------------------------*/
 
 #ifdef __GNUC__

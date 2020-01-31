@@ -21,7 +21,6 @@
 
 #include "../BlankerStartup/Startup.inl"
 
-
 /// RenderPreview
 void RenderPreview( struct BlankerData *bd )
 {
