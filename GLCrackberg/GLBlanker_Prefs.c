@@ -1,20 +1,12 @@
-#include "GLBlanker_Prefs.h"
-
-#include <proto/application.h>
+#include "blanker.h"
+#include <GLBlanker_Prefs.h>
 
 void GetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict)
 {
-	PrefsObject* obj = NULL;
-	obj = IPrefsObjects->DictGetObjectForKey( dict, "ScreenMode" );
-	IPrefsObjects->PrefsNumber( obj, NULL, ALPONUM_GetLong, &bd->screenmodeID, TAG_DONE );
+	GET_PREFS_LONG("ScreenMode", bd->screenmodeID);
 }
-
 
 void SetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict)
 {
-	IPrefsObjects->DictSetObjectForKey( dict,
-		IPrefsObjects->PrefsNumber( NULL, NULL, ALPONUM_AllocSetLong, bd->screenmodeID, TAG_DONE ),
-		"ScreenMode");
+	SET_PREFS_LONG(bd->screenmodeID, "ScreenMode");
 }
-
-

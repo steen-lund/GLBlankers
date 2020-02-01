@@ -1,10 +1,8 @@
 #include "blanker.h"
-#include "../Common/GLBlanker_Prefs.h"
-#include <proto/application.h>
+#include <GLBlanker_Prefs.h>
 
 void GetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict)
 {
-	PrefsObject* obj = NULL;
 	GET_PREFS_LONG("ScreenMode", bd->screenmodeID);
 	GET_PREFS_LONG("Segments", bd->segments);
 	GET_PREFS_LONG("Duration", bd->duration);
@@ -13,7 +11,6 @@ void GetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict)
 	GET_PREFS_BOOL("SpinZ", bd->spinZ);
 	GET_PREFS_BOOL("Wander", bd->wander);
 }
-
 
 void SetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict)
 {
@@ -25,4 +22,3 @@ void SetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict)
 	SET_PREFS_BOOL(bd->spinZ, "SpinZ");
 	SET_PREFS_BOOL(bd->wander, "Wander");
 }
-
