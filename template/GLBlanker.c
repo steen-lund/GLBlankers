@@ -7,6 +7,11 @@
 
 #include "../BlankerStartup/Startup.inl"
 
+extern void init_(struct BlankerData* bd);
+extern void release_();
+extern void reshape_(int width, int height);
+extern void draw_();
+
 void InitBlanker(struct BlankerData* bd)
 {
 	init_(bd);

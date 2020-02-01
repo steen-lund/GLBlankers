@@ -27,8 +27,9 @@
 #include "boxed.h"
 #include "yarandom.h"
 #include "utils.h"
-#include <GL/gl.h>
 #include "blanker.h"
+#include <GL/gl.h>
+#include <proto/exec.h>
 
 /*
 **----------------------------------------------------------------------------

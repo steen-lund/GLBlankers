@@ -14,20 +14,20 @@ extern void draw_crackberg();
 
 void InitBlanker(struct BlankerData* bd)
 {
-	init_crackberg(bd);
+    init_crackberg(bd);
 }
 
 void DeinitBlanker()
 {
-	//release_crackberg();
+    //release_crackberg();
 }
 
 void ReshapeBlanker(int width, int height)
 {
-	reshape_crackberg(width, height);
+    reshape_crackberg(width, height);
 }
 
 void DrawBlanker()
 {
-	draw_crackberg();
+    draw_crackberg();
 }

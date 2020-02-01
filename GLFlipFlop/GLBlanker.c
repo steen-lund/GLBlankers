@@ -15,20 +15,20 @@ extern void release_flipflop();
 
 void InitBlanker(struct BlankerData* bd)
 {
-	init_flipflop(bd);
+    init_flipflop(bd);
 }
 
 void DeinitBlanker()
 {
-	release_flipflop();
+    release_flipflop();
 }
 
 void ReshapeBlanker(int width, int height)
 {
-	reshape_flipflop(width, height);
+    reshape_flipflop(width, height);
 }
 
 void DrawBlanker()
 {
-	draw_flipflop();
+    draw_flipflop();
 }

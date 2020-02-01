@@ -14,20 +14,20 @@ extern void draw_noof();
 
 void InitBlanker(struct BlankerData* bd)
 {
-	init_noof(bd);
+    init_noof(bd);
 }
 
 void DeinitBlanker()
 {
-	//release_();
+    //release_();
 }
 
 void ReshapeBlanker(int width, int height)
 {
-	reshape_noof(width, height);
+    reshape_noof(width, height);
 }
 
 void DrawBlanker()
 {
-	draw_noof();
+    draw_noof();
 }

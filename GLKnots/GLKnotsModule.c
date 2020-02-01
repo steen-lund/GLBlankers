@@ -14,7 +14,7 @@ void draw_knot();
 
 void InitBlanker(struct BlankerData* bd)
 {
-	init_knot(bd);
+    init_knot(bd);
 }
 
 void DeinitBlanker()
@@ -22,10 +22,10 @@ void DeinitBlanker()
 
 void ReshapeBlanker(int width, int height)
 {
-	reshape_knot(width, height);
+    reshape_knot(width, height);
 }
 
 void DrawBlanker()
 {
-	draw_knot();
+    draw_knot();
 }

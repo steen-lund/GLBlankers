@@ -15,20 +15,20 @@ extern void release_boxed();
 
 void InitBlanker(struct BlankerData* bd)
 {
-	init_boxed(bd);
+    init_boxed(bd);
 }
 
 void DeinitBlanker()
 {
-	release_boxed();
+    release_boxed();
 }
 
 void ReshapeBlanker(int width, int height)
 {
-	reshape_boxed(width, height);
+    reshape_boxed(width, height);
 }
 
 void DrawBlanker()
 {
-	draw_boxed();
+    draw_boxed();
 }

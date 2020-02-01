@@ -15,20 +15,20 @@ extern void release_glschool();
 
 void InitBlanker(struct BlankerData* bd)
 {
-	init_glschool(bd);
+    init_glschool(bd);
 }
 
 void DeinitBlanker()
 {
-	release_glschool();
+    release_glschool();
 }
 
 void ReshapeBlanker(int width, int height)
 {
-	reshape_glschool(width, height);
+    reshape_glschool(width, height);
 }
 
 void DrawBlanker()
 {
-	draw_glschool();
+    draw_glschool();
 }
