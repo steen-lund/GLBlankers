@@ -343,6 +343,9 @@ struct Library *_manager_Init(struct BlankerBase *libBase, APTR seglist, struct 
     if ( OpenLibraries() )
     {
         ya_rand_init(0);
+#if DebugLevel > 0
+    IExec->DebugPrintF( "--> ya_rand_init ok\n");
+#endif
         return( (struct Library *)libBase );
     }
     else
@@ -797,6 +800,11 @@ void _blanker_Blank(struct BlankerModuleIFace *Self )
 /// Open Libraries
 uint32 OpenLibraries( void )
 {
+
+#if DebugLevel > 0
+    IExec->DebugPrintF( "--> OpenLibraries()\n" );
+#endif
+
     // Open Libraries and Interfaces
     NewlibBase = IExec->OpenLibrary("newlib.library", 3);
     INewlib = IExec->GetInterface(NewlibBase, "main", 1, NULL);
@@ -875,6 +883,9 @@ uint32 OpenLibraries( void )
         return FALSE;
     }
 
+#if DebugLevel > 0
+    IExec->DebugPrintF( "--> OpenGUILibraries()\n" );
+#endif
     return OpenGUILibraries();
 }
 ///
@@ -955,6 +966,10 @@ void CloseLibraries()
 struct BitMap* previewBitMap = NULL;
 BOOL CreatePreviewContext(struct BlankerData* bd, int w, int h)
 {
+#if DebugLevel > 0
+    IExec->DebugPrintF( "--> CreatePreviewContext()\n" );
+#endif
+
     int depth = IP96->p96GetBitMapAttr(bd->blankerRender->rp->BitMap, P96BMA_DEPTH);
     previewBitMap = IP96->p96AllocBitMap(w, h, depth, BMF_DISPLAYABLE, bd->blankerRender->rp->BitMap, 0);
 
@@ -975,6 +990,10 @@ BOOL CreatePreviewContext(struct BlankerData* bd, int w, int h)
 
 void DeletePreviewContext()
 {
+#if DebugLevel > 0
+    IExec->DebugPrintF( "--> DeletePreviewContext()\n" );
+#endif
+
     if (PreviewContext != NULL)
     {
         mglMakeCurrent(PreviewContext);
@@ -993,6 +1012,10 @@ void DeletePreviewContext()
 /// SetBlankingMode
 void SetBlankingMode( struct Screen *screen, uint32 mode )
 {
+#if DebugLevel > 0
+    IExec->DebugPrintF( "--> SetBlankingMode()\n" );
+#endif
+
     if ( screen )
     {
         switch ( mode )
