@@ -1,1 +1,4 @@
 *.o
+*.blanker
+**/.deps
+dist

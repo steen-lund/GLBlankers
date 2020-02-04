@@ -132,7 +132,7 @@ static char *ball_color1_str = DEF_BALL_COLOR1, *ball_color2_str = DEF_BALL_COLO
 static void
 parse_color (const char *name, const char *s, GLfloat *a)
 {
-#pragma message Remove this when including a color selector
+#pragma message("Remove this when including a color selector")
   a[3] = 1.0;  /* alpha */
   int temps[3];
   int c;
@@ -173,7 +173,7 @@ draw_grid ()
   GLfloat t2  = (GLfloat) tiles / 2;
   GLfloat s = 1.0 / (tiles + thickness);
   GLfloat z = 0;
-#pragma fix height
+#pragma message("fix height")
   GLfloat lw = 480 * 0.06 * thickness;
 
   glMaterialfv (GL_FRONT, GL_AMBIENT_AND_DIFFUSE, bp->grid_color);
@@ -368,7 +368,7 @@ draw_scanlines ()
 {
   /* boing_configuration *bp = &bps[MI_SCREEN(mi)]; */
   int wire = 0; /*MI_IS_WIREFRAME(mi);*/
-#pragma message fix these
+#pragma message("fix these")
   int w = 640;
   int h = 480;
 

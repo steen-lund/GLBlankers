@@ -1,70 +1,49 @@
-#include "GLMatrix_Prefs.h"
-
-#include <proto/application.h>
+#include "blanker.h"
+#include <GLBlanker_Prefs.h>
+#include <proto/graphics.h>
 
 void GetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict)
 {
-	PrefsObject* obj = NULL;
-
-	obj = IPrefsObjects->DictGetObjectForKey(dict, "Density");
-	IPrefsObjects->PrefsNumber(obj, NULL, ALPONUM_GetLong, &bd->density, TAG_DONE);
-
-	obj = IPrefsObjects->DictGetObjectForKey(dict, "Speed");
-	IPrefsObjects->PrefsNumber(obj, NULL, ALPONUM_GetLong, &bd->speed, TAG_DONE);
-
-	obj = IPrefsObjects->DictGetObjectForKey(dict, "Encoding");
-	IPrefsObjects->PrefsNumber(obj, NULL, ALPONUM_GetLong, &bd->encoding, TAG_DONE);
-
-	obj = IPrefsObjects->DictGetObjectForKey( dict, "ScreenMode" );
-	IPrefsObjects->PrefsNumber( obj, NULL, ALPONUM_GetLong, &bd->screenmodeID, TAG_DONE );
-
-	obj = IPrefsObjects->DictGetObjectForKey(dict, "Fog");
-	IPrefsObjects->PrefsNumber(obj, NULL, ALPONUM_GetBool, &bd->fog, TAG_DONE);
-
-	obj = IPrefsObjects->DictGetObjectForKey(dict, "Wave");
-	IPrefsObjects->PrefsNumber(obj, NULL, ALPONUM_GetBool, &bd->wave, TAG_DONE);
-
-	obj = IPrefsObjects->DictGetObjectForKey(dict, "Rotate");
-	IPrefsObjects->PrefsNumber(obj, NULL, ALPONUM_GetBool, &bd->rotate, TAG_DONE);
-
-	obj = IPrefsObjects->DictGetObjectForKey(dict, "InvertAlpha");
-	IPrefsObjects->PrefsNumber(obj, NULL, ALPONUM_GetBool, &bd->invertAlpha, TAG_DONE);
+    GET_PREFS_LONG("Density", bd->density);
+    GET_PREFS_LONG("Speed", bd->speed);
+    GET_PREFS_LONG("Encoding", bd->encoding);
+    GET_PREFS_LONG("ScreenMode", bd->screenmodeID);
+    GET_PREFS_BOOL("Fog", bd->fog);
+    GET_PREFS_BOOL("Wave", bd->wave);
+    GET_PREFS_BOOL("Rotate", bd->rotate);
+    GET_PREFS_BOOL("ShowTime", bd->showTime);
 }
-
 
 void SetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict)
 {
-	IPrefsObjects->DictSetObjectForKey( dict,
-		IPrefsObjects->PrefsNumber( NULL, NULL, ALPONUM_AllocSetLong, bd->density, TAG_DONE ),
-		"Density");
-
-	IPrefsObjects->DictSetObjectForKey( dict,
-		IPrefsObjects->PrefsNumber( NULL, NULL, ALPONUM_AllocSetLong, bd->speed, TAG_DONE ),
-		"Speed");
-
-	IPrefsObjects->DictSetObjectForKey( dict,
-		IPrefsObjects->PrefsNumber( NULL, NULL, ALPONUM_AllocSetLong, bd->encoding, TAG_DONE ),
-		"Encoding");
-
-	IPrefsObjects->DictSetObjectForKey( dict,
-		IPrefsObjects->PrefsNumber( NULL, NULL, ALPONUM_AllocSetLong, bd->screenmodeID, TAG_DONE ),
-		"ScreenMode");
-
-	IPrefsObjects->DictSetObjectForKey( dict,
-		IPrefsObjects->PrefsNumber( NULL, NULL, ALPONUM_AllocSetBool, bd->fog, TAG_DONE ),
-		"Fog");
-
-	IPrefsObjects->DictSetObjectForKey( dict,
-		IPrefsObjects->PrefsNumber( NULL, NULL, ALPONUM_AllocSetBool, bd->wave, TAG_DONE ),
-		"Wave");
-
-	IPrefsObjects->DictSetObjectForKey( dict,
-		IPrefsObjects->PrefsNumber( NULL, NULL, ALPONUM_AllocSetBool, bd->rotate, TAG_DONE ),
-		"Rotate");
-
-	IPrefsObjects->DictSetObjectForKey( dict,
-		IPrefsObjects->PrefsNumber( NULL, NULL, ALPONUM_AllocSetBool, bd->invertAlpha, TAG_DONE ),
-		"InvertAlpha");
+    SET_PREFS_LONG(bd->density, "Density");
+    SET_PREFS_LONG(bd->speed, "Speed");
+    SET_PREFS_LONG(bd->encoding, "Encoding");
+    SET_PREFS_LONG(bd->screenmodeID, "ScreenMode");
+    SET_PREFS_BOOL(bd->fog, "Fog");
+    SET_PREFS_BOOL(bd->wave, "Wave");
+    SET_PREFS_BOOL(bd->rotate, "Rotate");
+    SET_PREFS_BOOL(bd->showTime, "ShowTime");
 }
 
+void ResetSettingsToDefault(struct BlankerData* bd)
+{
+   uint32 id;
 
+    id = IGraphics->BestModeID(
+       BIDTAG_NominalWidth,     640,
+       BIDTAG_NominalHeight,    480,
+       BIDTAG_Depth,            16,
+       TAG_END
+    );
+
+   bd->density          = 20;
+   bd->speed            = 100;
+   bd->encoding         = 0;
+   bd->screenmodeID     = id;
+   bd->fog              = TRUE;
+   bd->wave             = TRUE;
+   bd->rotate           = TRUE;
+   bd->showTime         = FALSE;
+   bd->refetchSettings  = TRUE;
+}

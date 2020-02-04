@@ -1,48 +1,42 @@
-#include "GLBlockTube_Prefs.h"
-
-#include <proto/application.h>
+#include "blanker.h"
+#include <GLBlanker_Prefs.h>
+#include <proto/graphics.h>
 
 void GetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict)
 {
-	PrefsObject* obj = NULL;
-	obj = IPrefsObjects->DictGetObjectForKey( dict, "ScreenMode" );
-	IPrefsObjects->PrefsNumber( obj, NULL, ALPONUM_GetLong, &bd->screenmodeID, TAG_DONE );
+    GET_PREFS_LONG("ScreenMode", bd->screenmodeID);
+    GET_PREFS_LONG("HoldTime", bd->holdtime);
+    GET_PREFS_LONG("ChangeTime", bd->changetime);
 
-	obj = IPrefsObjects->DictGetObjectForKey( dict, "HoldTime" );
-	IPrefsObjects->PrefsNumber( obj, NULL, ALPONUM_GetLong, &bd->holdtime, TAG_DONE );
-
-	obj = IPrefsObjects->DictGetObjectForKey( dict, "ChangeTime" );
-	IPrefsObjects->PrefsNumber( obj, NULL, ALPONUM_GetLong, &bd->changetime, TAG_DONE );
-
-	obj = IPrefsObjects->DictGetObjectForKey( dict, "Fog" );
-	IPrefsObjects->PrefsNumber( obj, NULL, ALPONUM_GetBool, &bd->dofog, TAG_DONE );
-
-	obj = IPrefsObjects->DictGetObjectForKey( dict, "Texture" );
-	IPrefsObjects->PrefsNumber( obj, NULL, ALPONUM_GetBool, &bd->dotexture, TAG_DONE );
+    GET_PREFS_BOOL("Fog", bd->dofog);
+    GET_PREFS_BOOL("Texture", bd->dotexture);
 }
-
 
 void SetBlankerPrefs(struct BlankerData* bd, PrefsObject* dict)
 {
-	IPrefsObjects->DictSetObjectForKey( dict,
-		IPrefsObjects->PrefsNumber( NULL, NULL, ALPONUM_AllocSetLong, bd->screenmodeID, TAG_DONE ),
-		"ScreenMode");
+    SET_PREFS_LONG(bd->screenmodeID, "ScreenMode");
+    SET_PREFS_LONG(bd->holdtime, "HoldTime");
+    SET_PREFS_LONG(bd->changetime, "ChangeTime");
 
-	IPrefsObjects->DictSetObjectForKey( dict,
-		IPrefsObjects->PrefsNumber( NULL, NULL, ALPONUM_AllocSetLong, bd->holdtime, TAG_DONE ),
-		"HoldTime");
-
-	IPrefsObjects->DictSetObjectForKey( dict,
-		IPrefsObjects->PrefsNumber( NULL, NULL, ALPONUM_AllocSetLong, bd->changetime, TAG_DONE ),
-		"ChangeTime");
-
-	IPrefsObjects->DictSetObjectForKey( dict,
-		IPrefsObjects->PrefsNumber( NULL, NULL, ALPONUM_AllocSetBool, bd->dofog, TAG_DONE ),
-		"Fog");
-
-	IPrefsObjects->DictSetObjectForKey( dict,
-		IPrefsObjects->PrefsNumber( NULL, NULL, ALPONUM_AllocSetBool, bd->dotexture, TAG_DONE ),
-		"Texture");
+    SET_PREFS_BOOL(bd->dofog, "Fog");
+    SET_PREFS_BOOL(bd->dotexture, "Texture");
 }
 
+void ResetSettingsToDefault(struct BlankerData *bd)
+{
+    uint32 id;
 
+    id = IGraphics->BestModeID(
+        BIDTAG_NominalWidth,    640,
+        BIDTAG_NominalHeight,   480,
+        BIDTAG_Depth,           16,
+        TAG_END
+    );
+
+    bd->screenmodeID    = id;
+    bd->holdtime        = 0;
+    bd->changetime      = 0;
+    bd->dotexture       = TRUE;
+    bd->dofog           = FALSE;
+    bd->refetchSettings = TRUE;
+}
