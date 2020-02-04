@@ -1,5 +1,6 @@
 #include <utility/tagitem.h>
 
+#include <proto/blankermodule.h>
 #include <proto/exec.h>
 #include <proto/intuition.h>
 #include <proto/minigl.h>
@@ -124,7 +125,7 @@ BOOL MakeGUI(struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws)
 
                 /* Screen mode requester */
                 LAYOUT_AddChild, screenmode_requester =
-                GetScreenModeObject,
+                (struct Gadget*)GetScreenModeObject,
                     GA_RelVerify, TRUE,
                     GA_ID, GA_ScreenMode,
                     GETSCREENMODE_FilterFunc, ScreenmodeHook,
@@ -164,8 +165,8 @@ void GUIEventFunc(struct Hook* hook, struct BlankerModuleIFace* Self, struct Bla
         switch( gadgetID )
         {
               case GA_ScreenMode:
-                RequestScreenMode(screenmode_requester, bd->WinInfo.window);
-                IIntuition->GetAttr(GETSCREENMODE_DisplayID, screenmode_requester, &attr);
+                RequestScreenMode((Object*)screenmode_requester, bd->WinInfo.window);
+                IIntuition->GetAttr(GETSCREENMODE_DisplayID, (Object*)screenmode_requester, &attr);
                 bd->screenmodeID = attr;
                 break;
               default:
