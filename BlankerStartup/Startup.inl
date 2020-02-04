@@ -35,7 +35,56 @@
 
 #define DebugLevel  0
 
-struct BlankerBase {
+/* -- Global Constants -- */
+/// Libraries and Interfaces
+struct Library *ApplicationBase = NULL;
+struct Library *CyberGfxBase = NULL;
+struct Library *DOSBase = NULL;
+struct Library *GfxBase = NULL;
+struct Library *IntuitionBase = NULL;
+struct Library *P96Base = NULL;
+struct Library *UtilityBase = NULL;
+struct Library *MiniGLBase = NULL;
+struct Device *TimerBase = NULL;
+struct Library *ScreenBlankerBase = NULL;
+struct Library *SysBase = NULL;
+struct Library *NewlibBase = NULL;
+
+struct MiniGLIFace *IMiniGL = NULL;
+struct ApplicationIFace *IApplication = NULL;
+struct CyberGfxIFace *ICyberGfx = NULL;
+struct DOSIFace *IDOS = NULL;
+struct ExecIFace *IExec = NULL;
+struct GraphicsIFace *IGraphics = NULL;
+struct IntuitionIFace *IIntuition = NULL;
+struct P96IFace *IP96 = NULL;
+struct PrefsObjectsIFace *IPrefsObjects = NULL;
+struct UtilityIFace *IUtility = NULL;
+struct TimerIFace *ITimer = NULL;
+struct ScreenBlankerIFace *IScreenBlanker = NULL;
+struct Interface *INewlib = NULL;
+
+
+extern int ***__reent_magic __attribute__((__alias__("SysBase")));
+///
+
+/// Structs
+struct GLContextIFace *PreviewContext = NULL;
+struct GLContextIFace *ScreenContext = NULL;
+struct TimeRequest *TimeIO = NULL;
+
+const char __attribute__((used)) verstag[] = VERSTAG;
+
+#ifdef __GNUC__
+    #ifdef __PPC__
+        #pragma pack(2)
+    #endif
+#elif defined(__VBCC__)
+    #pragma amiga - align
+#endif
+
+struct BlankerBase
+{
     APTR    lib_Succ;        // Pointer to next (successor)
     APTR    lib_Pred;        // Pointer to previous (predecessor)
     uint8   lib_Type;
@@ -53,77 +102,47 @@ struct BlankerBase {
     APTR    lib_SegmentList;
 };
 
-/* -- Global Constants -- */
-/// Libraries and Interfaces
-struct Library *			ApplicationBase		= NULL;
-struct Library *			CyberGfxBase		= NULL;
-struct Library *        	DOSBase      		= NULL;
-struct Library *        	GfxBase      		= NULL;
-struct Library *        	IntuitionBase   	= NULL;
-struct Library *        	P96Base     		= NULL;
-struct Library *        	UtilityBase     	= NULL;
-struct Library *			MiniGLBase			= NULL;
-struct Device *             TimerBase           = NULL;
-struct Library *			ScreenBlankerBase	= NULL;
-struct Library *            SysBase             = NULL;
-struct Library *            NewlibBase          = NULL;
+#ifdef __GNUC__
+    #ifdef __PPC__
+        #pragma pack()
+    #endif
+#elif defined(__VBCC__)
+    #pragma default - align
+#endif
 
-struct MiniGLIFace *		IMiniGL				= NULL;
-struct ApplicationIFace *	IApplication 		= NULL;
-struct CyberGfxIFace *		ICyberGfx			= NULL;
-struct DOSIFace *    		IDOS            	= NULL;
-struct ExecIFace *      	IExec           	= NULL;
-struct GraphicsIFace *      IGraphics       	= NULL;
-struct IntuitionIFace * 	IIntuition      	= NULL;
-struct P96IFace *   		IP96	        	= NULL;
-struct PrefsObjectsIFace *	IPrefsObjects 		= NULL;
-struct UtilityIFace *   	IUtility        	= NULL;
-struct TimerIFace *			ITimer				= NULL;
-struct ScreenBlankerIFace *	IScreenBlanker		= NULL;
-struct Interface *          INewlib             = NULL;
+struct Library *_manager_Init(struct BlankerBase *libBase, APTR seglist, struct ExecIFace *myIExec);
+uint32 _manager_Obtain(struct LibraryManagerInterface *Self);
+uint32 _manager_Release(struct LibraryManagerInterface *Self);
+struct Library *_manager_Open(struct LibraryManagerInterface *Self, uint32 version);
+APTR _manager_Close(struct LibraryManagerInterface *Self);
+APTR _manager_Expunge(struct LibraryManagerInterface *Self);
 
-extern int *** __reent_magic __attribute__((__alias__("SysBase")));
-///
+uint32 _blanker_Obtain(struct BlankerModuleIFace *Self);
+uint32 _blanker_Release(struct BlankerModuleIFace *Self);
+uint32 _blanker_Expunge(struct BlankerModuleIFace *Self);
+struct Interface *_blanker_Clone(struct BlankerModuleIFace *Self);
+BOOL _blanker_Get(struct BlankerModuleIFace *Self, uint32 msgType, uint32 *msgData);
+BOOL _blanker_Set(struct BlankerModuleIFace *Self, uint32 msgType, uint32 msgData);
+void _blanker_Blank(struct BlankerModuleIFace *Self);
 
-/// Structs
-struct GLContextIFace *PreviewContext = NULL;
-struct GLContextIFace *ScreenContext = NULL;
+uint32 OpenLibraries(void);
+void CloseLibraries(void);
 
-const char __attribute__((used)) verstag[] = VERSTAG;
+void ResetSettingsToDefault(struct BlankerData *bd);
+void UpdateWindowSettings(struct BlankerData *bd);
 
-struct Library*		_manager_Init( 			struct BlankerBase* libBase, APTR seglist, struct ExecIFace* myIExec );
-uint32 				_manager_Obtain( 		struct LibraryManagerInterface* Self );
-uint32 				_manager_Release(		struct LibraryManagerInterface* Self );
-struct Library*		_manager_Open(			struct LibraryManagerInterface* Self, uint32 version );
-APTR 				_manager_Close( 		struct LibraryManagerInterface* Self );
-APTR 				_manager_Expunge( 		struct LibraryManagerInterface* Self );
+void RenderPreview(struct BlankerData *bd);
+void RenderScreen(struct BlankerData *bd);
 
-uint32 				_blanker_Obtain( 		struct BlankerModuleIFace* Self );
-uint32 				_blanker_Release( 		struct BlankerModuleIFace* Self );
-uint32				_blanker_Expunge( 		struct BlankerModuleIFace* Self );
-struct Interface*	_blanker_Clone( 		struct BlankerModuleIFace* Self );
-BOOL 				_blanker_Get( 			struct BlankerModuleIFace* Self, uint32 msgType, uint32* msgData );
-BOOL 				_blanker_Set(			struct BlankerModuleIFace* Self, uint32 msgType, uint32 msgData );
-void 				_blanker_Blank(			struct BlankerModuleIFace* Self );
+uint32 OpenGUILibraries();
+void CloseGUILibraries();
+BOOL MakeGUI(struct BlankerData *bd, struct BlankerPrefsWindowSetup *bpws);
+void DestroyGUI();
 
-uint32 				OpenLibraries( 			void );
-void 				CloseLibraries( 		void );
-
-void 				ResetSettingsToDefault( struct BlankerData* bd );
-void 				UpdateWindowSettings( 	struct BlankerData* bd );
-
-void 				RenderPreview( 			struct BlankerData* bd );
-void 				RenderScreen( 			struct BlankerData* bd );
-
-uint32				OpenGUILibraries();
-void				CloseGUILibraries();
-BOOL				MakeGUI(				struct BlankerData* bd, struct BlankerPrefsWindowSetup* bpws);
-void				DestroyGUI();
-
-void				InitBlanker(			struct BlankerData* bd);
-void				DeinitBlanker();
-void				ReshapeBlanker(			int width, int height);
-void				DrawBlanker();
+void InitBlanker(struct BlankerData *bd);
+void DeinitBlanker();
+void ReshapeBlanker(int width, int height);
+void DrawBlanker();
 
 const APTR Manager_Vectors[] =
 {
@@ -208,7 +227,7 @@ const struct BitMap PointerBitmap =
     { 0, 0, 0, 0, 0, 0, 0, 0 },
 };
 
-struct TimeRequest* TimeIO;
+
 ///
 
 /* -- Library -- */
